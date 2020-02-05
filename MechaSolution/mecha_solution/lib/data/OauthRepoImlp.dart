@@ -12,13 +12,11 @@ class OauthRepoImlp with OauthRepo {
     return instance;
   }
 
-  OauthAPI oauthAPI = OauthAPI();
+  OauthAPI oauthAPI = new OauthAPI();
 
   @override
-  Future<String> getToken() async{
+  Future<String> getToken() async {
     // TODO: implement getOauth
-    return oauthAPI.fecthOauthModel().then((value){
-      return value.data.token;
-    });
+    return oauthAPI.fecthOauthModel().then((value) => value.data.token);
   }
 }

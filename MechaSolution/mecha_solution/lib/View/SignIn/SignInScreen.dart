@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
+import 'package:mecha_solution/Repo/DecodeRepo.dart';
 import 'package:mecha_solution/data/OauthRepoImlp.dart';
+import 'package:mecha_solution/data/DecodeRepoImpl.dart';
 import '../Register/RegisterScreen.dart';
 class Login extends StatefulWidget {
   @override
@@ -36,6 +38,7 @@ class _LoginState extends State<Login> {
       InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
       obscureText: true,
     );
+
     RaisedButton _btnLogin = new RaisedButton(
         color: Colors.black,
         shape: RoundedRectangleBorder(
@@ -44,8 +47,12 @@ class _LoginState extends State<Login> {
           "Đăng nhập",
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
-        onPressed: () {
+        onPressed: () async {
           // thao tác đăng nhập
+          String token = await OauthRepoImlp.getInstance().getToken();
+          print("${token}");
+          var decode = await DecodeRepoImpl.GetInstance().getData();
+          print(decode.data.email);
         });
 
     SignInButton _btnFB = new SignInButton(
@@ -54,6 +61,7 @@ class _LoginState extends State<Login> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8))),
       onPressed: () {},
+      padding: EdgeInsets.only(left: 25),
     );
 
     SignInButton _btnGmail = new SignInButton(
@@ -62,6 +70,7 @@ class _LoginState extends State<Login> {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8))),
       onPressed: () {},
+      padding: EdgeInsets.only(left: 30),
     );
 
     Checkbox remember = new Checkbox(
@@ -122,7 +131,7 @@ class _LoginState extends State<Login> {
               height: 48,
               width: 343,
               child: _btnLogin,
-              color: Colors.lightBlueAccent,
+              //color: Colors.lightBlueAccent,
             ),
           ),
           Padding(
