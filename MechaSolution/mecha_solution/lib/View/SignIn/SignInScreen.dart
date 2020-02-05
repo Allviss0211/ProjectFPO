@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
-import 'RegisterScreen.dart';
+import 'package:mecha_solution/data/OauthRepoImlp.dart';
+import '../Register/RegisterScreen.dart';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
