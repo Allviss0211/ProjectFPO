@@ -14,8 +14,15 @@ class DecodeRepoImpl with DecodeRepo {
   DataAPI dataAPI = DataAPI();
 
   @override
-  Future<String> getData() async {
-    Decode data = await dataAPI.fetchInfo();
-    return data.data.username;
+  Future<String> getUserName() async {
+    return await dataAPI.fetchInfo().then((value){
+      return value.data.username;
+    });
+  }
+
+  Future<String> getEmail() async {
+    return await dataAPI.fetchInfo().then((value){
+      return value.data.email;
+    });
   }
 }

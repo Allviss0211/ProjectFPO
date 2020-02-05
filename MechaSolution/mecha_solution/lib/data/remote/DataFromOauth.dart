@@ -14,7 +14,6 @@ class DataAPI {
         headers: headers);
 
     if (responce.statusCode == 200) {
-      print(responce.body);
       return (Decode.fromJson(json.decode(responce.body)));
     } else {
       throw Exception('Lỗi load data');

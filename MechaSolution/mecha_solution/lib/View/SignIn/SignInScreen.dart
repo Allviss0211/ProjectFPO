@@ -15,15 +15,28 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool remembers = false;
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+
+  _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  } // đổi field text
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    TextField _email = new TextField(
+    TextFormField _email = new TextFormField(
       style: TextStyle(
         fontSize: 14,
         color: Colors.lightBlueAccent,
       ),
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      focusNode: _emailFocus,
+      onFieldSubmitted: (term) {
+        _fieldFocusChange(context, _emailFocus,_passwordFocus);
+      },
       decoration:
           InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
       onChanged: (value) {
@@ -32,11 +45,13 @@ class _LoginState extends State<Login> {
         });
       },
     );
+
     TextField _pass = new TextField(
       style: TextStyle(
         fontSize: 14,
         color: Colors.lightBlueAccent,
       ),
+      focusNode: _passwordFocus,
       decoration:
           InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
       obscureText: true,
@@ -51,12 +66,8 @@ class _LoginState extends State<Login> {
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         onPressed: () async {
-          print(await DecodeRepoImpl.GetInstance().getData());
-          // thao tác đăng nhập
-          String token = await OauthRepoImlp.getInstance().getToken();
-          print("${token}");
-          var decode = await DecodeRepoImpl.GetInstance().getData();
-          print(decode.data.email);
+          String email = await DecodeRepoImpl.GetInstance().getEmail();
+          String username = await DecodeRepoImpl.GetInstance().getUserName();
         });
 
     SignInButton _btnFB = new SignInButton(
@@ -183,6 +194,7 @@ class _LoginState extends State<Login> {
         ),
       ),
     ]);
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
