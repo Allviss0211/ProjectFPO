@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
-<<<<<<< Updated upstream
-import 'package:mecha_solution/Repo/DecodeRepo.dart';
-import 'package:mecha_solution/data/OauthRepoImlp.dart';
-import 'package:mecha_solution/data/DecodeRepoImpl.dart';
-=======
 import 'package:mecha_solution/View/SignIn/SignInModel.dart';
 import 'package:mecha_solution/data/DecodeRepoImpl.dart';
 import 'package:mecha_solution/data/OauthRepoImlp.dart';
 import 'package:mecha_solution/data/remote/DataFromOauth.dart';
 import 'package:scoped_model/scoped_model.dart';
->>>>>>> Stashed changes
 import '../Register/RegisterScreen.dart';
 class Login extends StatefulWidget {
   @override
@@ -56,10 +50,7 @@ class _LoginState extends State<Login> {
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         onPressed: () async {
-<<<<<<< Updated upstream
-=======
           print(await DecodeRepoImpl.GetInstance().getData());
->>>>>>> Stashed changes
           // thao tác đăng nhập
           String token = await OauthRepoImlp.getInstance().getToken();
           print("${token}");

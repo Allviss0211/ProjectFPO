@@ -4,22 +4,6 @@ import 'package:mecha_solution/Model/Decode.dart';
 import 'package:mecha_solution/Repo/DecodeRepo.dart';
 
 class DecodeRepoImpl with DecodeRepo {
-<<<<<<< Updated upstream
-  static DecodeRepo instance;
-
-  static DecodeRepo GetInstance(){
-    if(instance == null)
-      instance = DecodeRepoImpl();
-    return
-      instance;
-  }
-
-  DataAPI _dataAPI = new DataAPI();
-
-  Future<Decode> getData() async {
-    return await _dataAPI.fetchInfo().then((value) => value);
-  }
-=======
       static DecodeRepo instance;
 
       static DecodeRepo GetInstance(){
@@ -37,5 +21,4 @@ class DecodeRepoImpl with DecodeRepo {
         return data.data.username;
       }
 
->>>>>>> Stashed changes
 }
