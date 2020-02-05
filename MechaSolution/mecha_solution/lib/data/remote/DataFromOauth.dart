@@ -20,4 +20,5 @@ class DataAPI {
       throw Exception('Lỗi load data');
     }
   }
+
 }

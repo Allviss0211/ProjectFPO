@@ -9,4 +9,20 @@ class SignInModel extends Model {
     if (_instance == null) _instance = getInstance();
     return _instance;
   }
+
+  OauthRepo oauth = OauthRepoImlp();
+  String token;
+
+  SignInModel() {
+    updateOauth();
+  }
+
+  void updateOauth() async {
+    token = await oauth.getToken();
+    notifyListeners();
+  }
+
+  static void destroyInstance(){
+    _instance = null;
+  }
 }
