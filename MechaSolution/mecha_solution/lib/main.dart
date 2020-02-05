@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Register/RegisterScreen.dart';
 import 'package:mecha_solution/View/SignIn/SignInScreen.dart';
 
-void main() =>runApp(MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override

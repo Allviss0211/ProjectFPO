@@ -21,13 +21,13 @@ class _RegisterState extends State<Register> {
     TextField hoten = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
-      InputDecoration(labelText: "Họ và tên", border: OutlineInputBorder()),
+          InputDecoration(labelText: "Họ và tên", border: OutlineInputBorder()),
     );
 
     TextField sdt = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
-      InputDecoration(labelText: "SĐT", border: OutlineInputBorder()),
+          InputDecoration(labelText: "SĐT", border: OutlineInputBorder()),
     );
 
     TextField maxacthuc = new TextField(
@@ -39,13 +39,13 @@ class _RegisterState extends State<Register> {
     TextField email = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
-      InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
+          InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
     );
     TextField matkhau = new TextField(
       obscureText: true,
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
-      InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
+          InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
     );
 
     TextField rematkhau = new TextField(
@@ -126,9 +126,7 @@ class _RegisterState extends State<Register> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Container(
-                height: 43,
-                width: 403,child: maxacthuc),
+            child: Container(height: 43, width: 403, child: maxacthuc),
           ),
           Padding(
             padding: const EdgeInsets.all(4.0),
@@ -198,7 +196,6 @@ class _RegisterState extends State<Register> {
             child: Text("Đăng ký"),
           ),
         ),
-        body: Center(child: dangky)
-    );
+        body: Center(child: dangky));
   }
 }

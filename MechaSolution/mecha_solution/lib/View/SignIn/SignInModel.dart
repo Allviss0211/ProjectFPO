@@ -22,7 +22,7 @@ class SignInModel extends Model {
     notifyListeners();
   }
 
-  static void destroyInstance(){
+  static void destroyInstance() {
     _instance = null;
   }
 }

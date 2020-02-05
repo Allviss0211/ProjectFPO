@@ -22,10 +22,10 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    token: json["token"],
-  );
+        token: json["token"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "token": token,
-  };
+        "token": token,
+      };
 }

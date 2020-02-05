@@ -18,16 +18,16 @@ class Decode {
   });
 
   factory Decode.fromJson(Map<String, dynamic> json) => Decode(
-    exitcode: json["exitcode"],
-    data: Data.fromJson(json["data"]),
-    message: json["message"],
-  );
+        exitcode: json["exitcode"],
+        data: Data.fromJson(json["data"]),
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "exitcode": exitcode,
-    "data": data.toJson(),
-    "message": message,
-  };
+        "exitcode": exitcode,
+        "data": data.toJson(),
+        "message": message,
+      };
 }
 
 class Data {
@@ -60,34 +60,35 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    id: json["_id"],
-    username: json["username"],
-    fullname: json["fullname"],
-    phone: json["phone"],
-    email: json["email"],
-    avatar: json["avatar"],
-    birthday: json["birthday"],
-    levelMax: json["levelMax"],
-    levelMin: json["levelMin"],
-    userGroup: List<UserGroup>.from(json["userGroup"].map((x) => UserGroup.fromJson(x))),
-    iat: json["iat"],
-    exp: json["exp"],
-  );
+        id: json["_id"],
+        username: json["username"],
+        fullname: json["fullname"],
+        phone: json["phone"],
+        email: json["email"],
+        avatar: json["avatar"],
+        birthday: json["birthday"],
+        levelMax: json["levelMax"],
+        levelMin: json["levelMin"],
+        userGroup: List<UserGroup>.from(
+            json["userGroup"].map((x) => UserGroup.fromJson(x))),
+        iat: json["iat"],
+        exp: json["exp"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "_id": id,
-    "username": username,
-    "fullname": fullname,
-    "phone": phone,
-    "email": email,
-    "avatar": avatar,
-    "birthday": birthday,
-    "levelMax": levelMax,
-    "levelMin": levelMin,
-    "userGroup": List<dynamic>.from(userGroup.map((x) => x.toJson())),
-    "iat": iat,
-    "exp": exp,
-  };
+        "_id": id,
+        "username": username,
+        "fullname": fullname,
+        "phone": phone,
+        "email": email,
+        "avatar": avatar,
+        "birthday": birthday,
+        "levelMax": levelMax,
+        "levelMin": levelMin,
+        "userGroup": List<dynamic>.from(userGroup.map((x) => x.toJson())),
+        "iat": iat,
+        "exp": exp,
+      };
 }
 
 class UserGroup {
@@ -102,14 +103,14 @@ class UserGroup {
   });
 
   factory UserGroup.fromJson(Map<String, dynamic> json) => UserGroup(
-    groupId: json["groupId"],
-    groupName: json["groupName"],
-    groupLevel: json["groupLevel"],
-  );
+        groupId: json["groupId"],
+        groupName: json["groupName"],
+        groupLevel: json["groupLevel"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "groupId": groupId,
-    "groupName": groupName,
-    "groupLevel": groupLevel,
-  };
+        "groupId": groupId,
+        "groupName": groupName,
+        "groupLevel": groupLevel,
+      };
 }

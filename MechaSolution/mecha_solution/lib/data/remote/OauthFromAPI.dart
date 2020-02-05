@@ -8,8 +8,7 @@ class OauthAPI {
     var headers = {"Content-Type": "application/json"};
 
     var body = json.encode(
-        {"username":"admin",
-          "password":"827ccb0eea8a706c4c34a16891f84e7b"});
+        {"username": "admin", "password": "827ccb0eea8a706c4c34a16891f84e7b"});
     final responce = await http.post('http://18.139.240.152:3005/oauth',
         headers: headers, body: body);
 
