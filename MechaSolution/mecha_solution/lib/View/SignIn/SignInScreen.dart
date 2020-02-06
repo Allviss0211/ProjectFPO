@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:mecha_solution/Model/User.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
 import 'package:mecha_solution/View/SignIn/SignInModel.dart';
 import 'package:mecha_solution/data/DecodeRepoImpl.dart';
@@ -15,6 +16,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool remembers = false;
+  User user;
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
@@ -41,6 +43,13 @@ class _LoginState extends State<Login> {
           InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
       onChanged: (value) {
         setState(() {
+          try{
+             user.data.username = value.toString();
+          }
+          catch(exception)
+          {
+             user.data.username = '';
+          }
           //lấy giá trị textfield
         });
       },
@@ -55,6 +64,15 @@ class _LoginState extends State<Login> {
       decoration:
           InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
       obscureText: true,
+      onChanged: (value){
+        try{
+          user.data.password = value.toString();
+        }
+        catch(exception)
+        {
+          user.data.password = '';
+        }
+      },
     );
 
     RaisedButton _btnLogin = new RaisedButton(
