@@ -1,15 +1,15 @@
-class User {
+class SignUp {
   int exitcode;
   Data data;
   String message;
 
-  User({
+  SignUp({
     this.exitcode,
     this.data,
     this.message,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory SignUp.fromJson(Map<String, dynamic> json) => SignUp(
     exitcode: json["exitcode"],
     data: Data.fromJson(json["data"]),
     message: json["message"],

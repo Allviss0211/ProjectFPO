@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:mecha_solution/Model/User.dart';
+import 'package:mecha_solution/Model/SignUp.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
 import 'package:mecha_solution/View/SignIn/SignInModel.dart';
 import 'package:mecha_solution/data/DecodeRepoImpl.dart';
@@ -16,7 +16,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool remembers = false;
-  User user;
+  SignUp user;
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
 

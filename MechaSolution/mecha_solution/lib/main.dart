@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.lightBlueAccent,
       ),
-      home: Login(),
+      home: Register(),
       debugShowCheckedModeBanner: false,
     );
   }

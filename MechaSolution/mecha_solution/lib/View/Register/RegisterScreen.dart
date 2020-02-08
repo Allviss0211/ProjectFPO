@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mecha_solution/Model/SignUp.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:convert/convert.dart';
+import 'package:mecha_solution/Model/SignUpBody.dart';
 
 class Register extends StatefulWidget {
   List<String> sex = ["Nam", "Nữ"];
@@ -16,39 +21,69 @@ class _RegisterState extends State<Register> {
   int nu = 2;
   int group = 1;
   final format = DateFormat("dd-MM-yyyy");
+
+  SignUpBody userSignUp = new SignUpBody();
+
   @override
   Widget build(BuildContext context) {
-    TextField hoten = new TextField(
+    TextField fullname = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
           InputDecoration(labelText: "Họ và tên", border: OutlineInputBorder()),
+      onChanged: (value){
+        setState(() {
+          userSignUp.fullname = value.toString();
+        });
+      },
     );
 
-    TextField sdt = new TextField(
+    TextField phone = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
           InputDecoration(labelText: "SĐT", border: OutlineInputBorder()),
+      onChanged: (value){
+        setState(() {
+          userSignUp.phone = value.toString();
+        });
+      },
     );
 
-    TextField maxacthuc = new TextField(
+    TextField verificationcode = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration: InputDecoration(
           labelText: "Mã xác thực", border: OutlineInputBorder()),
+      onChanged: (value){
+        setState(() {
+          userSignUp.avatar = value.toString();
+        });
+      },
     );
 
     TextField email = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
           InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
+      onChanged: (value){
+        setState(() {
+          userSignUp.email = value.toString();
+        });
+      },
     );
-    TextField matkhau = new TextField(
+    TextField password = new TextField(
       obscureText: true,
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
           InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
+      onChanged: (value) {
+        setState(() { // đặt trong setState để cập nhật liên tục
+          var content = new Utf8Encoder().convert(value); // https://stackoverflow.com/questions/47870642/dart-md5-from-string
+          userSignUp.password = crypto.md5.convert(content).toString(); // convert to MD5
+          print(userSignUp.password);
+        });
+      },
     );
 
-    TextField rematkhau = new TextField(
+    TextField repassword = new TextField(
       obscureText: true,
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration: InputDecoration(
@@ -72,7 +107,7 @@ class _RegisterState extends State<Register> {
           });
         });
 
-    DateTimeField datetime = new DateTimeField(
+    DateTimeField birthday = new DateTimeField(
         format: format,
         decoration: InputDecoration(
             labelText: "Ngày sinh", border: OutlineInputBorder()),
@@ -93,9 +128,11 @@ class _RegisterState extends State<Register> {
           "Đăng ký",
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
-        onPressed: null);
+        onPressed: () async {
+          print(userSignUp.password); // bug nhận về null
+        });
 
-    RaisedButton _btnXacThuc = new RaisedButton(
+    RaisedButton _btnVerification = new RaisedButton(
         color: Colors.orange,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4))),
@@ -110,7 +147,7 @@ class _RegisterState extends State<Register> {
         child: Container(
           height: 43,
           width: 343,
-          child: hoten,
+          child: fullname,
         ),
       ),
       Padding(
@@ -118,7 +155,7 @@ class _RegisterState extends State<Register> {
         child: Container(
           height: 43,
           width: 343,
-          child: sdt,
+          child: phone,
         ),
       ),
       Stack(
@@ -126,14 +163,14 @@ class _RegisterState extends State<Register> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Container(height: 43, width: 403, child: maxacthuc),
+            child: Container(height: 43, width: 403, child: verificationcode),
           ),
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Container(
               height: 43,
               width: 120,
-              child: _btnXacThuc,
+              child: _btnVerification,
             ),
           )
         ],
@@ -151,7 +188,7 @@ class _RegisterState extends State<Register> {
         child: Container(
           height: 43,
           width: 343,
-          child: matkhau,
+          child: password,
         ),
       ),
       Padding(
@@ -159,7 +196,7 @@ class _RegisterState extends State<Register> {
         child: Container(
           height: 43,
           width: 343,
-          child: rematkhau,
+          child: repassword,
         ),
       ),
       Padding(
@@ -167,7 +204,7 @@ class _RegisterState extends State<Register> {
         child: Container(
           height: 43,
           width: 343,
-          child: datetime,
+          child: birthday,
         ),
       ),
       Padding(
