@@ -1,6 +1,7 @@
 class SignUpBody {
   String username;
   String password;
+  String repassword;
   String fullname;
   String phone;
   DateTime birthday;
@@ -14,6 +15,7 @@ class SignUpBody {
   {
     this.username,
     this.password,
+    this.repassword,
     this.fullname,
     this.phone,
     this.birthday,

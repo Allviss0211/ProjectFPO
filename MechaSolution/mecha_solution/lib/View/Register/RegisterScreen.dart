@@ -16,7 +16,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  bool test = true;
+  bool _validUsername = false;
   int nam = 1;
   int nu = 2;
   int group = 1;
@@ -28,11 +28,12 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     TextField fullname = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
-      decoration:
-          InputDecoration(labelText: "Họ và tên", border: OutlineInputBorder()),
-      onChanged: (value){
+      decoration: InputDecoration(labelText: "Họ và tên", border: OutlineInputBorder(),errorText: _validUsername ? "Chưa nhập tên người dùng" : null),
+      onChanged: (value) {
         setState(() {
+          value.isEmpty ? _validUsername = true : _validUsername = false;
           userSignUp.fullname = value.toString();
+          print(value);
         });
       },
     );
@@ -41,7 +42,7 @@ class _RegisterState extends State<Register> {
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
           InputDecoration(labelText: "SĐT", border: OutlineInputBorder()),
-      onChanged: (value){
+      onChanged: (value) {
         setState(() {
           userSignUp.phone = value.toString();
         });
@@ -52,7 +53,7 @@ class _RegisterState extends State<Register> {
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration: InputDecoration(
           labelText: "Mã xác thực", border: OutlineInputBorder()),
-      onChanged: (value){
+      onChanged: (value) {
         setState(() {
           userSignUp.avatar = value.toString();
         });
@@ -63,7 +64,7 @@ class _RegisterState extends State<Register> {
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
           InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
-      onChanged: (value){
+      onChanged: (value) {
         setState(() {
           userSignUp.email = value.toString();
         });
@@ -73,11 +74,14 @@ class _RegisterState extends State<Register> {
       obscureText: true,
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration:
-          InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
+          InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder(), suffixIcon: Icon(Icons.remove_red_eye)),
       onChanged: (value) {
-        setState(() { // đặt trong setState để cập nhật liên tục
-          var content = new Utf8Encoder().convert(value); // https://stackoverflow.com/questions/47870642/dart-md5-from-string
-          userSignUp.password = crypto.md5.convert(content).toString(); // convert to MD5
+        setState(() {
+          // đặt trong setState để cập nhật liên tục
+          var content = new Utf8Encoder().convert(
+              value); // https://stackoverflow.com/questions/47870642/dart-md5-from-string
+          userSignUp.password =
+              crypto.md5.convert(content).toString(); // convert to MD5
           print(userSignUp.password);
         });
       },
@@ -88,6 +92,16 @@ class _RegisterState extends State<Register> {
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration: InputDecoration(
           labelText: "Nhập lại mật khẩu", border: OutlineInputBorder()),
+      onChanged: (value) {
+        setState(() {
+          // đặt trong setState để cập nhật liên tục
+          var content = new Utf8Encoder().convert(
+              value); // https://stackoverflow.com/questions/47870642/dart-md5-from-string
+          userSignUp.repassword =
+              crypto.md5.convert(content).toString(); // convert to MD5
+          if (userSignUp.repassword != userSignUp.password) {}
+        });
+      },
     );
 
     Radio radioNam = new Radio(
