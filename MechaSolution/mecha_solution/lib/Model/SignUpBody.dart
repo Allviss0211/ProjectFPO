@@ -23,6 +23,6 @@ class SignUpBody {
     this.email,
     this.avatar,
     this.score,
-    this.gender,
+    this.gender = 1,
   });
 }

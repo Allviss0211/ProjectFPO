@@ -16,7 +16,26 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  bool _validUsername = false;
+  var _formKey = GlobalKey<FormState>();
+
+  double _height = 43;
+  bool _validFullname = false;
+  bool _validPassword = false;
+  bool _validEmail = false;
+  bool _validRepassword = false;
+  bool _validVerificationcode = false;
+  bool _validPhone = false;
+  bool _validBirthday = false;
+
+  bool _validFullnameCheck = true;
+  bool _validPasswordCheck = true;
+  bool _validEmailCheck = true;
+  bool _validRepasswordCheck = true;
+  bool _validVerificationcodeCheck = true;
+  bool _validPhoneCheck = true;
+  bool _validBirthdayCheck = true;
+
+  bool look = true;
   int nam = 1;
   int nu = 2;
   int group = 1;
@@ -26,24 +45,47 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    TextField fullname = new TextField(
+    TextFormField fullname = new TextFormField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
-      decoration: InputDecoration(labelText: "Họ và tên", border: OutlineInputBorder(),errorText: _validUsername ? "Chưa nhập tên người dùng" : null),
+      decoration: InputDecoration(
+          labelText: "Họ và tên",
+          border: OutlineInputBorder(),
+          errorText: _validFullname ? "Chưa nhập tên người dùng" : null),
       onChanged: (value) {
         setState(() {
-          value.isEmpty ? _validUsername = true : _validUsername = false;
+          if (value.isEmpty) {
+            setState(() {
+              _validFullname = true;
+            });
+          } else {
+            setState(() {
+              _validFullname = false;
+              _validFullnameCheck = false;
+            });
+          }
           userSignUp.fullname = value.toString();
-          print(value);
         });
       },
     );
 
     TextField phone = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
-      decoration:
-          InputDecoration(labelText: "SĐT", border: OutlineInputBorder()),
+      decoration: InputDecoration(
+          labelText: "SĐT",
+          border: OutlineInputBorder(),
+          errorText: _validPhone ? "Chưa nhập số điện thoại" : null),
       onChanged: (value) {
         setState(() {
+          if (value.isEmpty) {
+            setState(() {
+              _validPhone = true;
+            });
+          } else {
+            setState(() {
+              _validPhone = false;
+              _validPhoneCheck = false;
+            });
+          }
           userSignUp.phone = value.toString();
         });
       },
@@ -52,37 +94,77 @@ class _RegisterState extends State<Register> {
     TextField verificationcode = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration: InputDecoration(
-          labelText: "Mã xác thực", border: OutlineInputBorder()),
+        labelText: "Mã xác thực",
+        border: OutlineInputBorder(),
+      ),
       onChanged: (value) {
         setState(() {
-          userSignUp.avatar = value.toString();
+          if (value.isEmpty) {
+            setState(() {
+              _validVerificationcode = true;
+            });
+          } else {
+            setState(() {
+              _validVerificationcode = false;
+              _validVerificationcodeCheck = false;
+            });
+          }
+          userSignUp.work = value.toString();
         });
       },
     );
 
     TextField email = new TextField(
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
-      decoration:
-          InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
+      decoration: InputDecoration(
+          labelText: "E-mail",
+          border: OutlineInputBorder(),
+          errorText: _validEmail ? "Chưa nhập địa chỉ Email" : null),
       onChanged: (value) {
         setState(() {
+          if (value.isEmpty) {
+            setState(() {
+              _validEmail = true;
+            });
+          } else {
+            setState(() {
+              _validEmail = false;
+              _validEmailCheck = false;
+            });
+          }
           userSignUp.email = value.toString();
         });
       },
     );
+
     TextField password = new TextField(
-      obscureText: true,
+      obscureText: look ? true : false,
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
-      decoration:
-          InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder(), suffixIcon: Icon(Icons.remove_red_eye)),
+      decoration: InputDecoration(
+          labelText: "Mật khẩu",
+          border: OutlineInputBorder(),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.remove_red_eye),
+            onPressed: () { setState(() => look = !look); },
+          ),
+          errorText: _validPassword ? "Chưa nhập mật khẩu" : null),
       onChanged: (value) {
         setState(() {
+          if (value.isEmpty) {
+            setState(() {
+              _validPassword = true;
+            });
+          } else {
+            setState(() {
+              _validPassword = false;
+              _validPasswordCheck = false;
+            });
+          }
           // đặt trong setState để cập nhật liên tục
           var content = new Utf8Encoder().convert(
               value); // https://stackoverflow.com/questions/47870642/dart-md5-from-string
           userSignUp.password =
               crypto.md5.convert(content).toString(); // convert to MD5
-          print(userSignUp.password);
         });
       },
     );
@@ -91,15 +173,34 @@ class _RegisterState extends State<Register> {
       obscureText: true,
       style: TextStyle(color: Colors.lightBlueAccent, fontSize: 14),
       decoration: InputDecoration(
-          labelText: "Nhập lại mật khẩu", border: OutlineInputBorder()),
+          labelText: "Nhập lại mật khẩu",
+          border: OutlineInputBorder(),
+          errorText:
+              _validRepassword ? "Nhập lại mật khẩu không chính xác" : null),
       onChanged: (value) {
         setState(() {
+          if (value.isEmpty) {
+            setState(() {
+              _validRepassword = true;
+            });
+          } else {
+            _validRepassword = false;
+            _validRepasswordCheck = false;
+          }
           // đặt trong setState để cập nhật liên tục
           var content = new Utf8Encoder().convert(
               value); // https://stackoverflow.com/questions/47870642/dart-md5-from-string
           userSignUp.repassword =
               crypto.md5.convert(content).toString(); // convert to MD5
-          if (userSignUp.repassword != userSignUp.password) {}
+          if (userSignUp.repassword != userSignUp.password) {
+            setState(() {
+              _validRepassword = true;
+            });
+          } else {
+            setState(() {
+              _validRepassword = false;
+            });
+          }
         });
       },
     );
@@ -109,6 +210,7 @@ class _RegisterState extends State<Register> {
         groupValue: group,
         onChanged: (value) {
           setState(() {
+            userSignUp.gender = value;
             group = value;
           });
         });
@@ -117,6 +219,7 @@ class _RegisterState extends State<Register> {
         groupValue: group,
         onChanged: (value) {
           setState(() {
+            userSignUp.gender = value;
             group = value;
           });
         });
@@ -124,17 +227,37 @@ class _RegisterState extends State<Register> {
     DateTimeField birthday = new DateTimeField(
         format: format,
         decoration: InputDecoration(
-            labelText: "Ngày sinh", border: OutlineInputBorder()),
+            labelText: "Ngày sinh",
+            border: OutlineInputBorder(),
+            errorText: _validBirthday ? "Chưa nhập ngày sinh" : null),
         style: TextStyle(fontSize: 14),
+        onChanged: (value) {
+          if (value == null) {
+            setState(() {
+              _validBirthday = true;
+            });
+          } else if (value != null) {
+            setState(() {
+              _validBirthday = false;
+              _validBirthdayCheck = false;
+            });
+          }
+        },
         onShowPicker: (context, value) {
+          if (value == null) {
+            setState(() {
+              _validBirthday = true;
+            });
+          }
           return showDatePicker(
-              context: context,
-              initialDate: value ?? DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2500));
+            context: context,
+            initialDate: value ?? DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime(2500),
+          );
         });
 
-    RaisedButton _btnReg = new RaisedButton(
+    RaisedButton _btnRegister = new RaisedButton(
         color: Colors.lightBlueAccent,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -143,7 +266,39 @@ class _RegisterState extends State<Register> {
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         onPressed: () async {
-          print(userSignUp.password); // bug nhận về null
+          setState(() {
+            if (_validVerificationcode) {
+              showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                        title: const Text("Warning",style: TextStyle(color: Colors.red,),),
+                        content: Text("Chưa nhập mã xác thực",),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("OK"),
+                            onPressed: () => Navigator.pop(context, 'OK'),
+                          )
+                        ],
+                      ));
+            } else
+              if(_validBirthdayCheck || _validRepasswordCheck || _validPasswordCheck || _validEmailCheck || _validPhoneCheck || _validFullnameCheck)
+            {
+              showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text("Warning",style: TextStyle(color: Colors.red,),),
+                    content: Text("Vui lòng nhập đủ thông tin",),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("OK"),
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                      )
+                    ],
+                  ));
+            } else
+              {
+              }
+          });
         });
 
     RaisedButton _btnVerification = new RaisedButton(
@@ -159,40 +314,36 @@ class _RegisterState extends State<Register> {
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
-          height: 43,
-          width: 343,
-          child: fullname,
-        ),
+            height: _validPhone ? 66 : 43, width: 343, child: fullname),
       ),
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
-          height: 43,
+          height: _validPhone ? 66 : 43,
           width: 343,
           child: phone,
         ),
       ),
-      Stack(
-        alignment: AlignmentDirectional.centerEnd,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Container(height: 43, width: 403, child: verificationcode),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Container(
-              height: 43,
-              width: 120,
-              child: _btnVerification,
-            ),
-          )
-        ],
-      ),
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
           height: 43,
+          width: 343,
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 273,
+                child: verificationcode,
+              ),
+              Container(height: 43, width: 120, child: _btnVerification)
+            ],
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Container(
+          height: _validEmail ? 66 : 43,
           width: 343,
           child: email,
         ),
@@ -200,7 +351,7 @@ class _RegisterState extends State<Register> {
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
-          height: 43,
+          height: _validPassword ? 66 : 43,
           width: 343,
           child: password,
         ),
@@ -208,7 +359,7 @@ class _RegisterState extends State<Register> {
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
-          height: 43,
+          height: _validRepassword ? 66 : 43,
           width: 343,
           child: repassword,
         ),
@@ -216,7 +367,7 @@ class _RegisterState extends State<Register> {
       Padding(
         padding: const EdgeInsets.all(4.0),
         child: Container(
-          height: 43,
+          height: _validBirthday ? 66 : 43,
           width: 343,
           child: birthday,
         ),
@@ -238,7 +389,7 @@ class _RegisterState extends State<Register> {
           child: Container(
             height: 48,
             width: 343,
-            child: _btnReg,
+            child: _btnRegister,
           ))
     ]);
     return Scaffold(
@@ -247,6 +398,12 @@ class _RegisterState extends State<Register> {
             child: Text("Đăng ký"),
           ),
         ),
-        body: Center(child: dangky));
+        body: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Center(child: dangky),
+          ),
+        ));
   }
 }
