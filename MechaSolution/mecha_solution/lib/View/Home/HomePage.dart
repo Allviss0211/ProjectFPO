@@ -170,6 +170,8 @@ class _HomePageState extends State<HomePage> {
         ),
         body: listProductHome(),
         bottomNavigationBar: BottomNavigationBar(
+          onTap: _onTapTapped,
+          currentIndex: _currentIndex,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
