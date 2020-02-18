@@ -15,6 +15,8 @@ class _HomePageState extends State<HomePage> {
   static int _count = -1;
   ProductAPI productAPI = new ProductAPI();
 
+  int _currentIndex = 0;
+
   List<ExpansionTile> _listOfProduct = List<ExpansionTile>.generate(
       listproduct.length,
       (i) => ExpansionTile(
@@ -31,42 +33,61 @@ class _HomePageState extends State<HomePage> {
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
-                          '${listproduct[i].children[_count < listproduct[i].children.length ? ++_count : _count = 0].title}'),
+                          "${listproduct[i]
+                              .children[_count < listproduct[i].children.length ? ++_count : _count = 0].title}"),
                       onTap: () {},
                     ))
                 .toList(),
           ));
 
-  Icon _searchIcon = new Icon(
-    Icons.search,
-    color: Colors.white,
-  );
+//  Icon _searchIcon = new Icon(
+//    Icons.search,
+//    color: Colors.white,
+//  );
 
-  Widget _appBarTitle = new Text("MechaSolutionVN");
-  TextField txtSearch = new TextField(
+  Widget _appBarTitle = new Text(
+    "MechaSolution",
+    style: TextStyle(color: Colors.white),
+  );
+  Widget txtSearch = new TextField(
     decoration: new InputDecoration(
       border: false ? OutlineInputBorder() : InputBorder.none,
       hintText: "Search here",
       hintStyle: TextStyle(color: Color(0xffd8d8d8)),
     ),
-    style: TextStyle(fontSize: 20, color: Colors.black),
+    style: TextStyle(fontSize: 20, color: Colors.white),
   );
   ListView listProduct = new ListView(
     scrollDirection: Axis.horizontal,
   );
 
-  void _searchPress() {
+//  void _searchPress() {
+//    setState(() {
+//      if (this._searchIcon.icon == Icons.search) {
+//        this._searchIcon = new Icon(
+//          Icons.cancel,
+//          color: Colors.white,
+//        );
+//        this._appBarTitle = Container(
+//          child: txtSearch,
+//          width: 180,
+//        );
+//      } else {
+//        this._searchIcon = new Icon(
+//          Icons.search,
+//          color: Colors.white,
+//        );
+//        this._appBarTitle = new Text(
+//          "MechaSolution",
+//          style: TextStyle(color: Colors.white),
+//        );
+//      }
+//    });
+//  }
+
+  void _onTapTapped(int index) {
     setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.cancel);
-        this._appBarTitle = Container(
-          child: txtSearch,
-          width: 200,
-        );
-      } else {
-        this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text("MechaSolution");
-      }
+      _currentIndex = index;
     });
   }
 
@@ -79,11 +100,6 @@ class _HomePageState extends State<HomePage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              IconButton(
-                icon: _searchIcon,
-                iconSize: 30,
-                onPressed: _searchPress,
-              ),
               Padding(
                 padding: const EdgeInsets.only(right: 25),
                 child: _appBarTitle,
@@ -99,38 +115,39 @@ class _HomePageState extends State<HomePage> {
           ),
           flexibleSpace: new Container(
             decoration: BoxDecoration(
-              gradient: new LinearGradient(colors: [Colors.blue, Colors.black]),
+              gradient:
+                  new LinearGradient(colors: [Colors.lightBlue, Colors.black87]),
             ),
           ),
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(50),
-            child: Container(
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 5),
-                    child: Icon(
-                      Icons.search,
-                      size: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-//                VerticalDivider(
-//                  color: Colors.black,
-//                  width: 10.0,
+//        bottom: PreferredSize(
+//          preferredSize: Size.fromHeight(50),
+//          child: Container(
+//            child: Row(
+//              children: <Widget>[
+//                Padding(
+//                  padding: const EdgeInsets.only(left: 15, right: 5),
+//                  child: Icon(
+//                    Icons.search,
+//                    size: 30,
+//                    color: Colors.black,
+//                  ),
 //                ),
-                  Container(
-                    child: txtSearch,
-                    padding: EdgeInsets.only(left: 5),
-                    width: 340,
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-            ),
-          ),
+////                VerticalDivider(
+////                  color: Colors.black,
+////                  width: 10.0,
+////                ),
+//                Container(
+//                  child: txtSearch,
+//                  padding: EdgeInsets.only(left: 5),
+//                  width: 340,
+//                ),
+//              ],
+//            ),
+//            decoration: BoxDecoration(
+//              color: Colors.white,
+//            ),
+//          ),
+//        ),
         ),
         drawer: Drawer(
           child: ListView(
@@ -154,6 +171,18 @@ class _HomePageState extends State<HomePage> {
           },
         ),
         body: listProductHome(),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: Text("Trang chủ"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications),
+              title: Text("Thông báo"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -197,37 +226,15 @@ List<Product> listproduct = <Product>[
       new Product('Blog'),
     ],
   ),
-  new Product('Nhiều hơn trên MechaSolution', <Product>[
-    new Product('Mời bạn bè'),
-    new Product('Liên lạc với chúng tôi'),
-    new Product('Đánh giá và khảo sát'),
-  ])
+  new Product(
+      'Nhiều hơn trên MechaSolution',
+      <Product>[
+        new Product('Mời bạn bè'),
+        new Product('Liên lạc với chúng tôi'),
+        new Product('Đánh giá và khảo sát'),
+      ],
+  ),
 ];
-
-//int count = -1;
-//class ProductItem extends StatelessWidget {
-//  const ProductItem(this.product);
-//  final Product product;
-//
-//  Widget _buildTiles(Product root) {
-//    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-//    return ExpansionTile(
-//      key: PageStorageKey<Product>(root),
-//      leading: Icon(Icons.settings),
-//      title: Text(root.title, style: TextStyle(fontWeight: FontWeight.bold),),
-//      children: root.children.map((_buildTiles) => ListTile(
-//        leading: SizedBox(width: 5,),
-//        title: Text("${root.children[count < root.children.length ? count += 1 : count = 0].title}"),
-//        onTap: () {},
-//      )).toList(),
-//    );
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return _buildTiles(product);
-//  }
-//}
 
 Widget drawHeader() {
   return DrawerHeader(
@@ -296,7 +303,134 @@ Widget drawerUserHeader() {
     ),
     accountEmail: Text(
       "Chào mừng trở lại",
-      style: TextStyle(fontSize: 14),
+      style: TextStyle(fontSize: 13),
     ),
   );
+}
+
+BottomAppBar bottomAppbar() {
+  return BottomAppBar(
+    color: Colors.white,
+    shape: CircularNotchedRectangle(),
+    child: Container(
+      height: 60,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Icon(
+                Icons.home,
+                size: 30,
+              ),
+              Text(
+                "Trang chủ",
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Icon(Icons.view_module),
+              Text("Danh mục"),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Icon(Icons.notifications),
+              Text("Thông báo"),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Icon(Icons.person_outline),
+              Text("Tài khoản"),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+void _showSearchModal(context) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) => SearchBottomModel(),
+  );
+}
+
+class SearchBottomModel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 26),
+      decoration: BoxDecoration(
+        color: Color(0xFFFDFDFD),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: MediaQuery.of(context).size.width * 0.2,
+            height: 3,
+            decoration: ShapeDecoration(
+              shape: StadiumBorder(),
+              color: Color(0xFFF4F5F4),
+            ),
+          ),
+          SizedBox(height: 18),
+          SearchBar(margin: EdgeInsets.all(0)),
+          SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 18),
+        ],
+      ),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  const SearchBar({
+    Key key,
+    this.margin = const EdgeInsets.symmetric(horizontal: 28),
+  }) : super(key: key);
+
+  final EdgeInsets margin;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 18),
+      margin: margin,
+      decoration: ShapeDecoration(
+        shape: StadiumBorder(),
+        color: Theme.of(context).scaffoldBackgroundColor,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.search),
+          SizedBox(width: 13),
+          Expanded(
+            child: TextFormField(
+              decoration: InputDecoration(
+                hintText: "Tìm kiếm ở đây",
+                hintStyle: TextStyle(
+                  fontSize: 14,
+                  color: Color(0x64303943),
+                ),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

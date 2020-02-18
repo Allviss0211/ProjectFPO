@@ -332,7 +332,7 @@ class _RegisterState extends State<Register> {
           child: Row(
             children: <Widget>[
               Container(
-                width: 273,
+                width: 258,
                 child: verificationcode,
               ),
               Container(height: 43, width: 120, child: _btnVerification)

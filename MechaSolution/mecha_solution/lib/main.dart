@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Register/RegisterScreen.dart';
 import 'package:mecha_solution/View/SignIn/SignInScreen.dart';
+import 'View/Home/HomePage.dart';
+
+import 'View/SignIn/SignInScreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,8 +20,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.lightBlueAccent,
       ),
-      home: Login(),
-      debugShowCheckedModeBanner: false,
+      home: HomePage(),
     );
   }
 }

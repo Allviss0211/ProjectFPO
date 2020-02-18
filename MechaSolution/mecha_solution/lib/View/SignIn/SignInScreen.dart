@@ -22,7 +22,8 @@ class _LoginState extends State<Login> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus) {
+  _fieldFocusChange(
+      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   } // đổi field text
@@ -39,18 +40,16 @@ class _LoginState extends State<Login> {
       textInputAction: TextInputAction.next,
       focusNode: _emailFocus,
       onFieldSubmitted: (term) {
-        _fieldFocusChange(context, _emailFocus,_passwordFocus);
+        _fieldFocusChange(context, _emailFocus, _passwordFocus);
       },
       decoration:
           InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
       onChanged: (value) {
         setState(() {
-          try{
-             user.data.username = value.toString();
-          }
-          catch(exception)
-          {
-             user.data.username = '';
+          try {
+            user.data.username = value.toString();
+          } catch (exception) {
+            user.data.username = '';
           }
           //lấy giá trị textfield
         });
@@ -66,12 +65,10 @@ class _LoginState extends State<Login> {
       decoration:
           InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
       obscureText: true,
-      onChanged: (value){
-        try{
+      onChanged: (value) {
+        try {
           user.data.password = value.toString();
-        }
-        catch(exception)
-        {
+        } catch (exception) {
           user.data.password = '';
         }
       },
