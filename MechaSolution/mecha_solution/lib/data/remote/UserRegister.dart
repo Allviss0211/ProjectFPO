@@ -2,8 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:mecha_solution/Model/SignUp.dart';
-import 'package:mecha_solution/Model/SignUpBody.dart';
+import 'package:mecha_solution/Model/SignupFolder/SignUp.dart';
+import 'package:mecha_solution/Model/SignupFolder/SignUpBody.dart';
 
 class UserRegister{
   Future<SignUp> sendRegister(SignUpBody signUpBody) async {

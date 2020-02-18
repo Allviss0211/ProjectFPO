@@ -4,10 +4,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mecha_solution/Model/SignUp.dart';
+import 'package:mecha_solution/Model/SignupFolder/SignUp.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:convert/convert.dart';
-import 'package:mecha_solution/Model/SignUpBody.dart';
+import 'package:mecha_solution/Model/SignupFolder/SignUpBody.dart';
 
 class Register extends StatefulWidget {
   List<String> sex = ["Nam", "Nữ"];

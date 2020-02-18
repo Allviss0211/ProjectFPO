@@ -1,11 +1,3 @@
-import 'package:mecha_solution/Repo/DecodeRepo.dart';
-
-import 'package:mecha_solution/Repo/DecodeRepo.dart';
-
-import 'package:mecha_solution/Repo/DecodeRepo.dart';
-
-import 'package:mecha_solution/Repo/DecodeRepo.dart';
-
 class Decode {
   int exitcode;
   Data data;

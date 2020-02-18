@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:mecha_solution/Model/SignUp.dart';
+import 'package:mecha_solution/Model/SignupFolder/SignUp.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
+import 'package:mecha_solution/View/Home/HomePage.dart';
 import 'package:mecha_solution/View/SignIn/SignInModel.dart';
 import 'package:mecha_solution/data/DecodeRepoImpl.dart';
 import 'package:mecha_solution/data/OauthRepoImlp.dart';
 import 'package:mecha_solution/data/remote/DataFromOauth.dart';
+import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../Register/RegisterScreen.dart';
 
@@ -84,8 +86,13 @@ class _LoginState extends State<Login> {
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         onPressed: () async {
-          String email = await DecodeRepoImpl.GetInstance().getEmail();
-          String username = await DecodeRepoImpl.GetInstance().getUserName();
+//          String email = await DecodeRepoImpl.GetInstance().getEmail();
+////          String username = await DecodeRepoImpl.GetInstance().getUserName();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => HomePage()));
+        ProductAPI product = new ProductAPI();
+        product.getProductByID("5e1d5fa7d8ad9c3950820805");
+        product.getListProduct();
         });
 
     SignInButton _btnFB = new SignInButton(
