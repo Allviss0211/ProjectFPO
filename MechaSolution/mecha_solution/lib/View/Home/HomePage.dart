@@ -161,13 +161,11 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
           onPressed: () {
-            AlertDialog dialog = new AlertDialog(
-              title: Text("You were tapped"),
-            );
-            showDialog(context: context, child: dialog);
+            _showSearchModal(context);
           },
         ),
         body: listProductHome(),
