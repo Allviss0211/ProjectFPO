@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
-import 'package:mecha_solution/View/ProductItem.dart';
+import 'package:mecha_solution/View/SignIn/ProductSrceen.dart';
 import 'package:mecha_solution/View/SignIn/ProductSrceen.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -13,6 +17,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static int _count = -1;
+  final List<String> images = [
+    "https://i.pinimg.com/236x/ea/63/bd/ea63bd0226462d0dac4476cddc9d80ec.jpg",
+    "https://i.pinimg.com/236x/ad/58/d8/ad58d82c6044628404141c139208afa0.jpg",
+    "https://i.pinimg.com/236x/c8/46/01/c846014a90f7478c2c6c88e53f80b186.jpg",
+    "https://i.pinimg.com/236x/8e/b7/55/8eb755d16b2c2bd0b301f07f28048112.jpg",
+    "https://i.pinimg.com/236x/91/41/41/914141f1d8df24c24e1c3e4118d1c6f2.jpg"
+  ];
+
   ProductAPI productAPI = new ProductAPI();
 
   int _currentIndex = 0;
@@ -33,8 +45,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       trailing: Icon(Icons.arrow_forward_ios),
                       title: Text(
-                          "${listproduct[i]
-                              .children[_count < listproduct[i].children.length ? ++_count : _count = 0].title}"),
+                          "${listproduct[i].children[_count < listproduct[i].children.length ? ++_count : _count = 0].title}"),
                       onTap: () {},
                     ))
                 .toList(),
@@ -115,8 +126,8 @@ class _HomePageState extends State<HomePage> {
           ),
           flexibleSpace: new Container(
             decoration: BoxDecoration(
-              gradient:
-                  new LinearGradient(colors: [Colors.lightBlue, Colors.black87]),
+              gradient: new LinearGradient(
+                  colors: [Colors.lightBlue, Colors.black87]),
             ),
           ),
 //        bottom: PreferredSize(
@@ -155,8 +166,9 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               drawerUserHeader(),
               Column(
-                children:
-                    _listOfProduct.map((expansionTile) => expansionTile).toList(),
+                children: _listOfProduct
+                    .map((expansionTile) => expansionTile)
+                    .toList(),
               )
             ],
           ),
@@ -187,23 +199,241 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget listProductHome() => ScopedModelDescendant<HomeModel>(
-          builder: (BuildContext context, Widget child, HomeModel model) {
-        return ListView.builder(
-            itemCount: model.listProduct.data.length,
-            itemBuilder: (context, index) {
-              return ProductItem(
-                product: model.listProduct.data[index],
-                onClick: (product) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ProductScreen(
-                        model.listProduct.data.indexOf(product),
-                        model.listProduct.data);
-                  }));
+  Widget listProductHome() => ListView(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only( bottom: 10),
+            child: _buildSlider(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Text(
+              "Danh sách sản phẩm",
+              style: Theme.of(context).textTheme.title,
+            ),
+          ),
+          Container(
+              width: double.infinity,
+              height: 150,
+              margin: EdgeInsets.only(top: 15),
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 6,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _categoryProduce(context, index);
+                  })),
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Text(
+              "Gói combo",
+              style: Theme.of(context).textTheme.title,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+              width: double.infinity,
+              height: 150,
+              margin: EdgeInsets.only(top: 15),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 3,
+                itemBuilder: (BuildContext context, int index) {
+                  return _featureProduct(context);
                 },
-              );
-            });
-      });
+              )),
+          Padding(
+            padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+            child: Text("Top sản phẩm", style: Theme.of(context).textTheme.title,),
+          ),
+          ListView.builder(itemCount: 4, itemBuilder: (context, index){ return _topProduct(index);})
+        ],
+      );
+
+  Widget _categoryProduce(BuildContext context, int index) {
+    return new InkWell(
+      onTap: () {},
+      child: Column(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black12,
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                      "https://i.pinimg.com/236x/c5/71/cf/c571cf3b28768db808492072034e9e0e.jpg"),
+                  fit: BoxFit.cover),
+            ),
+            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            width: 100,
+            height: 100,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text("Raperri " + index.toString()),
+        ],
+      ),
+    );
+  }
+
+  Widget _featureProduct(BuildContext context) {
+    return InkWell(
+      onTap: () {},
+      child: Stack(
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey,
+                image: DecorationImage(
+                    image: CachedNetworkImageProvider(
+                        "https://i.pinimg.com/236x/c5/71/cf/c571cf3b28768db808492072034e9e0e.jpg"),
+                    fit: BoxFit.cover)),
+            alignment: Alignment.center,
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            width: 150,
+            height: 150,
+          ),
+          Positioned(
+            bottom: 0,
+            left: 10,
+            right: 10,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              color: Colors.black87,
+              child: Text(
+                "Gói combo",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18.0),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _topProduct(index) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey,
+                      image: DecorationImage(
+                          image: CachedNetworkImageProvider(images[index % images.length]
+                              ),
+                          fit: BoxFit.cover)),
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  width: 150,
+                  height: 150,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Top sản phẩm",
+                  softWrap: true,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "2 củ",
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green),
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey,
+                      image: DecorationImage(
+                          image: CachedNetworkImageProvider(images[index % images.length]),
+                          fit: BoxFit.cover)),
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  width: 150,
+                  height: 150,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Top sản phẩm",
+                  softWrap: true,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "2 củ",
+                  style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSlider() {
+    return Container(
+      height: 160.0,
+      child: Stack(
+        children: <Widget>[
+          ClipPath(
+            clipper: DiagonalPathClipperOne(),
+          child: Container(
+            height: 110,
+            color: Colors.deepPurpleAccent,
+          ),
+          ),
+          Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child : Swiper(
+              autoplay: true,
+              itemCount: 4,
+              itemBuilder: (BuildContext context, int index){
+                return new Image(image: CachedNetworkImageProvider(images[index]),
+                fit: BoxFit.cover,);
+              },
+            )
+          )
+        ],
+      ),
+    );
+  }
 }
 
 class Product {
@@ -227,12 +457,12 @@ List<Product> listproduct = <Product>[
     ],
   ),
   new Product(
-      'Nhiều hơn trên MechaSolution',
-      <Product>[
-        new Product('Mời bạn bè'),
-        new Product('Liên lạc với chúng tôi'),
-        new Product('Đánh giá và khảo sát'),
-      ],
+    'Nhiều hơn trên MechaSolution',
+    <Product>[
+      new Product('Mời bạn bè'),
+      new Product('Liên lạc với chúng tôi'),
+      new Product('Đánh giá và khảo sát'),
+    ],
   ),
 ];
 

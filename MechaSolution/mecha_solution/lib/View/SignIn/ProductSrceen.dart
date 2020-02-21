@@ -1,174 +1,75 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 
-class ProductScreen extends StatefulWidget {
-  final int initialIndex;
-  final List<Product> product;
-
-  ProductScreen(this.initialIndex, this.product);
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return MState(initialIndex, product);
-  }
+Widget _featureProduct(BuildContext context) {
+  return InkWell(
+    onTap: () {},
+    child: Stack(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey,
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                      "https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.elektor.com%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F2b4bee73c90e4689bbc4ca8391937af9%2Fr%2Fa%2Fraspberry-pi-4-4gb.jpg&imgrefurl=https%3A%2F%2Fwww.elektor.com%2Fraspberry-pi-4-b-4-gb-ram&tbnid=peUGMIsadthfFM&vet=12ahUKEwjirbqJ1-HnAhXBNHIKHYNmDmkQMygBegUIARDLAQ..i&docid=uTHXETEkgbffsM&w=800&h=800&itg=1&q=raspberry%20pi%204&ved=2ahUKEwjirbqJ1-HnAhXBNHIKHYNmDmkQMygBegUIARDLAQ"),
+                  fit: BoxFit.cover)),
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          width: 150,
+          height: 150,
+        ),
+        Positioned(
+          bottom: 0,
+          left: 10,
+          right: 10,
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            color: Colors.black87,
+            child: Text(
+              "Gói combo",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18.0),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
+    ),
+  );
 }
 
 
-class MState extends State with TickerProviderStateMixin {
-  int initialIndex;
-  List<Product> product;
-
-  MState(this.initialIndex, this.product);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Detail"),
-      ),
-      body: Stack(
-
-      ),
-    );
-  }
-
-  Widget pageViewWidget() {
-    return PageView.builder(
-      itemBuilder: (context, index) {
-        return itemPageViewWidget(product[index]);
-      },
-      itemCount: product.length,
-      controller: PageController(
-        initialPage: initialIndex,
-      ),
-      onPageChanged: (currentPos) {
-        setState(() {
-          initialIndex = currentPos;
-        });
-      },
-    );
-  }
-
-  Widget itemPageViewWidget(Product product) {
-    return Hero(
-      tag: "hero tag container ${product.name}",
-      child: Card(
-        elevation: 3,
-        margin: EdgeInsets.fromLTRB(24, 16, 24, 24),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.fromLTRB(36, 36, 0, 24),
-              child: Hero(
-                tag: "hero tag ${product.name}",
-                child: Container(
-                  width: 200,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Text(
-                      "${product.name}",
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+Widget _categoryProduce(BuildContext context){
+  return InkWell(
+    onTap: (){},
+    child: Column(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.black12,
+            image: DecorationImage(
+              image: CachedNetworkImageProvider("https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.elektor.com%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F2b4bee73c90e4689bbc4ca8391937af9%2Fr%2Fa%2Fraspberry-pi-4-4gb.jpg&imgrefurl=https%3A%2F%2Fwww.elektor.com%2Fraspberry-pi-4-b-4-gb-ram&tbnid=peUGMIsadthfFM&vet=12ahUKEwjirbqJ1-HnAhXBNHIKHYNmDmkQMygBegUIARDLAQ..i&docid=uTHXETEkgbffsM&w=800&h=800&itg=1&q=raspberry%20pi%204&ved=2ahUKEwjirbqJ1-HnAhXBNHIKHYNmDmkQMygBegUIARDLAQ"),
+              fit: BoxFit.cover
             ),
-            ListTile(
-              title: Hero(
-                tag: "hero tag ${product.name} main",
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    "${product.document}",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-              leading: leadingMainWidget(product),
-              subtitle: Text("${product.name}"),
-            ),
-            detailWidget(
-              AssetImage("images/temp.png"),
-              Hero(
-                tag: "hero tag ${product.name} temp",
-                child: Material(
-                  color: Colors.transparent,
-                  child: Text(
-                    "${product.price.toInt()}\$",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            detailWidget(
-              AssetImage("images/pressure.png"),
-              Text("${product.quantity.toInt()} item"),
-            ),
-            detailWidget(
-              AssetImage("images/humidity.png"),
-              Text("${product.minQuantity.toInt()} minItem"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget leadingMainWidget(Product product) {
-    if (product.name == "RaperRi -3") {
-      return Container(
-        height: 24,
-        width: 24,
-        child: Image(
-          image: AssetImage(
-            "asser/image/raperri",
           ),
-          color: Colors.black54,
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          width: 100,
+          height: 100,
         ),
-      );
-    } else if (product.name == "RaperRi -3") {
-      return Container(
-        height: 24,
-        width: 24,
-        child: Image(
-          image: AssetImage(
-            "asser/image/raperri",
-          ),
-          color: Colors.black54,
+        SizedBox(
+          height: 10,
         ),
-      );
-    } else if (product.name == "RaperRi -3") {
-      return Container(
-        height: 24,
-        width: 24,
-        child: Image(
-          image: AssetImage(
-            "asser/image/raperri",
-          ),
-          color: Colors.black54,
-        ),
-      );
-    }
-  }
-
-  Widget detailWidget(ImageProvider image, Widget title) {
-    return ListTile(
-      leading: Container(
-        height: 24,
-        width: 24,
-        child: Image(
-          image: image,
-          color: Colors.black54,
-        ),
-      ),
-      title: title,
-    );
-  }
+        Text("Raperri 3"),
+      ],
+    ),
+  );
 }
