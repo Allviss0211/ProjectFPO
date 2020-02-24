@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController controller;
   static int _count = -1;
   final List<String> images = [
     "https://i.pinimg.com/236x/ea/63/bd/ea63bd0226462d0dac4476cddc9d80ec.jpg",
@@ -24,6 +26,18 @@ class _HomePageState extends State<HomePage> {
     "https://i.pinimg.com/236x/8e/b7/55/8eb755d16b2c2bd0b301f07f28048112.jpg",
     "https://i.pinimg.com/236x/91/41/41/914141f1d8df24c24e1c3e4118d1c6f2.jpg"
   ];
+
+  @override
+  void initState(){
+    super.initState();
+    controller = new ScrollController()..addListener(_listenScroll);
+  }
+
+  @override
+  void dispose(){
+    controller.removeListener(_listenScroll);
+    super.dispose();
+  }
 
   ProductAPI productAPI = new ProductAPI();
 
@@ -180,7 +194,7 @@ class _HomePageState extends State<HomePage> {
             _showSearchModal(context);
           },
         ),
-        body: listProductHome(),
+        body: SafeArea(child: listProductHome()),
         bottomNavigationBar: BottomNavigationBar(
           onTap: _onTapTapped,
           currentIndex: _currentIndex,
@@ -218,9 +232,10 @@ class _HomePageState extends State<HomePage> {
               margin: EdgeInsets.only(top: 15),
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 6,
+                  controller: controller,
+                  itemCount: images.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _categoryProduce(context, index);
+                    return _categoryProduce(context, index < 5 ? index : index - (5 * (index ~/ 5)));
                   })),
           Padding(
             padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
@@ -240,14 +255,14 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
-                  return _featureProduct(context);
+                  return _featureProduct(context,index);
                 },
               )),
           Padding(
             padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
             child: Text("Top sản phẩm", style: Theme.of(context).textTheme.title,),
           ),
-          ListView.builder(itemCount: 4, itemBuilder: (context, index){ return _topProduct(index);})
+         _topProduct(),
         ],
       );
 
@@ -262,7 +277,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black12,
               image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                      "https://i.pinimg.com/236x/c5/71/cf/c571cf3b28768db808492072034e9e0e.jpg"),
+                      images[index]),
                   fit: BoxFit.cover),
             ),
             alignment: Alignment.center,
@@ -279,7 +294,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _featureProduct(BuildContext context) {
+  Widget _featureProduct(BuildContext context, int index) {
     return InkWell(
       onTap: () {},
       child: Stack(
@@ -306,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               color: Colors.black87,
               child: Text(
-                "Gói combo",
+                "Gói combo ${index}",
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -322,7 +337,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _topProduct(index) {
+  Widget _topProduct() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
       child: Row(
@@ -335,8 +350,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey,
                       image: DecorationImage(
-                          image: CachedNetworkImageProvider(images[index % images.length]
-                              ),
+                          image: CachedNetworkImageProvider(images[0]),
                           fit: BoxFit.cover)),
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -374,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey,
                       image: DecorationImage(
-                          image: CachedNetworkImageProvider(images[index % images.length]),
+                          image: CachedNetworkImageProvider(images[0]),
                           fit: BoxFit.cover)),
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -433,6 +447,15 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void _listenScroll(){
+    print(controller.position.extentAfter);
+    if (controller.position.extentAfter < 2) {
+      setState(() {
+        images.addAll(new List.generate(10, (index) => 'index'));
+      });
+    }
   }
 }
 

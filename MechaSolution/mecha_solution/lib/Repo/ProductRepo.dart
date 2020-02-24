@@ -8,10 +8,10 @@ abstract class ProductRepo{
 
   Future<ListProduct> getProductAll();
 
-  Future<CreatProduct> createProduct(Product product);
+  Future<void> createProduct(Product product);
 
-  Future<UpdateProduct> updateProduct(Product product);
+  Future<void> updateProduct(Product product);
 
-  Future<Product> deleteProduct(String productId);
+  Future<void> deleteProduct(String productId);
 
 }

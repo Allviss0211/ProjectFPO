@@ -28,15 +28,15 @@ class ProductRepoImlp with ProductRepo {
     return await productAPI.getListProduct();
   }
 
-  Future<CreatProduct> createProduct(Product product) async {
+  Future<void> createProduct(Product product) async {
     return await productAPI.createProduct(product);
   }
 
-  Future<UpdateProduct> updateProduct(Product product) async {
+  Future<void> updateProduct(Product product) async {
     return await productAPI.updateProduct(product);
   }
 
-  Future<Product> deleteProduct(String productId) async {
+  Future<void> deleteProduct(String productId) async {
     return await productAPI.deleteProduct(productId);
   }
 }
