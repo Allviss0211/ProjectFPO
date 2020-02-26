@@ -5,6 +5,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,7 +15,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ScrollController controller;
   static int _count = -1;
-  List<String> images = List.generate(10, (index) => "Sản phầm " + index.toString());
+  List<String> images =
+      List.generate(10, (index) => "Sản phầm " + index.toString());
 
   @override
   void setState(fn) async {
@@ -24,13 +26,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-
     super.initState();
     controller = new ScrollController()..addListener(_listenScroll);
   }
 
   @override
-  void dispose(){
+  void dispose() {
     controller.removeListener(_listenScroll);
     super.dispose();
   }
@@ -208,70 +209,98 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget listProductHome() => ListView(
-    children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.only( bottom: 10),
-        child: _buildSlider(),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
-        child: Text(
-          "Danh sách sản phẩm",
-          style: Theme.of(context).textTheme.title,
-        ),
-      ),
-      Container(
-          width: double.infinity,
-          height: 150,
-          margin: EdgeInsets.only(top: 15),
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              controller: controller,
-              itemCount: images.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _categoryProduce(context, index < 15 ? index : index - (15 * (index ~/ 15)));
-              })),
-      Padding(
-        padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
-        child: Text(
-          "Gói combo",
-          style: Theme.of(context).textTheme.title,
-        ),
-      ),
-      SizedBox(
-        height: 10,
-      ),
-      Container(
-          width: double.infinity,
-          height: 150,
-          margin: EdgeInsets.only(top: 15),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: images.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _featureProduct(context, index < 15 ? index : index - (5 * (index ~/ 5 )));
-            },
-          )),
-      Padding(
-        padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
-        child: Text("Top sản phẩm", style: Theme.of(context).textTheme.title,),
-      ),
-      _topProduct(),
-    ],
-  );
+  Widget listProductHome() => ScopedModelDescendant<HomeModel>(
+        builder: (BuildContext build, Widget child, HomeModel model) {
+          return ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: _buildSlider(),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                child: Text(
+                  "Danh sách sản phẩm",
+                  style: Theme.of(context).textTheme.title,
+                ),
+              ),
+              Container(
+                  width: double.infinity,
+                  height: 150,
+                  margin: EdgeInsets.only(top: 15),
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      controller: controller,
+                      itemCount: images.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (model == null) {
+                          return CircularProgressIndicator();
+                        } else {
+                          //model.updateProductView();
+                          return _categoryProduce(index < 15
+                              ? index
+                              : index - (15 * (index ~/ 15)));
+                        }
+                      })),
+              Padding(
+                padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                child: Text(
+                  "Gói combo",
+                  style: Theme.of(context).textTheme.title,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                  width: double.infinity,
+                  height: 150,
+                  margin: EdgeInsets.only(top: 15),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 3,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (model == null) {
+                        return CircularProgressIndicator();
+                      } else {
+                        //model.updateProductView();
+                        return _featureProduct(context, index);
+                      }
+                    },
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+                child: Text(
+                  "Top sản phẩm",
+                  style: Theme.of(context).textTheme.title,
+                ),
+              ),
+              model.listProduct.data == null ? CircularProgressIndicator() : _topProduct(),
+            ],
+          );
+        },
+      );
 
-  Widget _categoryProduce(BuildContext context, int index) {
+  Widget _categoryProduce(int index) {
     return ScopedModelDescendant<HomeModel>(
-      builder: (BuildContext context, Widget child, HomeModel homeModel){
+      builder: (BuildContext context, Widget child, HomeModel model) {
         return InkWell(
           onTap: () {
-            showDialog(context: context,
-                builder: (BuildContext context){
-                  return AlertDialog(
-                    content: Text('${homeModel.listProduct.data[index].description}'),
-                  );
-                });
+//            showDialog(
+//                context: context,
+//                builder: (BuildContext context) {
+//                  if (model == null) {
+//                    return CircularProgressIndicator();
+//                  } else {
+//                    //model.updateProductView();
+//                    return AlertDialog(
+//                      content: Text('${model.listProduct.data[index].id}'),
+//                    );
+//                  }
+//                });
+            print("home    " + model.listProduct.data[index].id );
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => DetailProductScreen(productID: model.listProduct.data[index].id,)));
           },
           child: Column(
             children: <Widget>[
@@ -281,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.black12,
                   image: DecorationImage(
                       image: CachedNetworkImageProvider(
-                          homeModel.listProduct.data[index].image),
+                          model.listProduct.data[index].image),
                       fit: BoxFit.cover),
                 ),
                 alignment: Alignment.center,
@@ -292,7 +321,9 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 10,
               ),
-              Text(homeModel.listProduct.data[index].name.toString() + " " + index.toString()),
+              Text(model.listProduct.data[index].name.toString() +
+                  " " +
+                  index.toString()),
             ],
           ),
         );
@@ -345,7 +376,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _topProduct() {
     return ScopedModelDescendant<HomeModel>(
-      builder: (BuildContext context, Widget child, HomeModel homeModel){
+      builder: (BuildContext context, Widget child, HomeModel model) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
           child: Row(
@@ -358,7 +389,8 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.grey,
                           image: DecorationImage(
-                              image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
+                              image: CachedNetworkImageProvider(
+                                  model.listProduct.data[0].image),
                               fit: BoxFit.cover)),
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -396,7 +428,8 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.grey,
                           image: DecorationImage(
-                              image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
+                              image: CachedNetworkImageProvider(
+                                  model.listProduct.data[0].image),
                               fit: BoxFit.cover)),
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(horizontal: 10),
@@ -431,40 +464,40 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSlider() {
-    return ScopedModelDescendant<HomeModel>(
-      builder: (BuildContext context, Widget child,HomeModel homeModel){
-        return Container(
-          height: 160.0,
-          child: Stack(
-            children: <Widget>[
-              ClipPath(
-                clipper: DiagonalPathClipperOne(),
-                child: Container(
-                  height: 110,
-                  color: Colors.deepPurpleAccent,
-                ),
-              ),
-              Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child : Swiper(
-                    autoplay: true,
-                    itemCount: 4,
-                    itemBuilder: (BuildContext context, int index){
-                      return Image(image: CachedNetworkImageProvider(homeModel.listProduct.data[index].image),
-                        fit: BoxFit.cover,);
-                    },
-                  )
-              )
-            ],
+    return Container(
+      height: 160.0,
+      child: Stack(
+        children: <Widget>[
+          ClipPath(
+            clipper: DiagonalPathClipperOne(),
+            child: Container(
+              height: 110,
+              color: Colors.deepPurpleAccent,
+            ),
           ),
-        );
-      },
+          Container(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Swiper(
+                autoplay: true,
+                itemCount: 4,
+                itemBuilder: (BuildContext context, int index) {
+                  return new Image(
+                    image: CachedNetworkImageProvider(
+                        //homeModel.listProduct.data[0].image
+                        "https://mechasolution.vn/source/product/raspberry-pi-4/4295-05.jpg"),
+                    fit: BoxFit.cover,
+                  );
+                },
+              ))
+        ],
+      ),
     );
   }
 
-  void _listenScroll(){
-    print(controller.position.extentAfter);
+  void _listenScroll() {
+    //print(controller.position.extentAfter);
     if (controller.position.extentAfter < 2) {
       setState(() {
         images.addAll(new List.generate(10, (index) => 'index'));
@@ -473,32 +506,32 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Product {
+class ProductDrawer {
   String title;
-  List<Product> children;
-  Product(this.title, [this.children = const <Product>[]]);
+  List<ProductDrawer> children;
+  ProductDrawer(this.title, [this.children = const <ProductDrawer>[]]);
 }
 
-List<Product> listproduct = <Product>[
-  new Product(
+List<ProductDrawer> listproduct = <ProductDrawer>[
+  new ProductDrawer(
     'Sản phẩm',
-    <Product>[
-      new Product('IoT'),
-      new Product('Máy tính nhúng'),
-      new Product('Module'),
-      new Product('Mạch điện'),
-      new Product('Cảm biến'),
-      new Product('Robot'),
-      new Product('Máy in / Scan 3D'),
-      new Product('Blog'),
+    <ProductDrawer>[
+      new ProductDrawer('IoT'),
+      new ProductDrawer('Máy tính nhúng'),
+      new ProductDrawer('Module'),
+      new ProductDrawer('Mạch điện'),
+      new ProductDrawer('Cảm biến'),
+      new ProductDrawer('Robot'),
+      new ProductDrawer('Máy in / Scan 3D'),
+      new ProductDrawer('Blog'),
     ],
   ),
-  new Product(
+  new ProductDrawer(
     'Nhiều hơn trên MechaSolution',
-    <Product>[
-      new Product('Mời bạn bè'),
-      new Product('Liên lạc với chúng tôi'),
-      new Product('Đánh giá và khảo sát'),
+    <ProductDrawer>[
+      new ProductDrawer('Mời bạn bè'),
+      new ProductDrawer('Liên lạc với chúng tôi'),
+      new ProductDrawer('Đánh giá và khảo sát'),
     ],
   ),
 ];

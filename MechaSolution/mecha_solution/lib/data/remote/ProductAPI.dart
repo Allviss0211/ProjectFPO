@@ -9,9 +9,10 @@ import 'package:mecha_solution/Model/ProductFolder/UpdateProduct.dart';
 import '../OauthRepoImlp.dart';
 
 class ProductAPI {
+
   Future<Product> getProductByID(String id) async {
     String token = await OauthRepoImlp.getInstance().getToken();
-    var headers = {"Content-Type": "application/json", "x-access-token": token};
+    var headers = {"x-access-token": token, "Content-Type": "application/json",};
 
     var body = json.encode({"productId": id});
     final responce = await http.post(
@@ -20,6 +21,7 @@ class ProductAPI {
         body: body);
 
     if (responce.statusCode == 200) {
+      print("responce    " + responce.body);
       return (Product.fromJson(json.decode(responce.body)));
     } else {
       throw Exception('Lỗi load data');
