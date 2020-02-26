@@ -26,7 +26,7 @@ class ProductAPI {
     }
   }
 
-  Future<ListProduct> getListProduct() async {
+    Future<ListProduct> getListProduct() async {
     String token = await OauthRepoImlp.getInstance().getToken();
     var headers = {"x-access-token": token};
 

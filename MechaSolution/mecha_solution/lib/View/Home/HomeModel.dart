@@ -17,7 +17,7 @@ class HomeModel extends Model {
   ProductRepo productRepo = new ProductRepoImlp();
   ListProduct listProduct = new ListProduct();
 
-  HomeModel(){
+  HomeModel() {
     updateProductView();
   }
 

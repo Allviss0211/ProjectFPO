@@ -5,9 +5,11 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
+import 'package:mecha_solution/Repo/ProductRepo.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/View/SignIn/ProductSrceen.dart';
 import 'package:mecha_solution/View/SignIn/ProductSrceen.dart';
+import 'package:mecha_solution/data/ProductRepoImlp.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -19,16 +21,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ScrollController controller;
   static int _count = -1;
-  final List<String> images = [
-    "https://i.pinimg.com/236x/ea/63/bd/ea63bd0226462d0dac4476cddc9d80ec.jpg",
-    "https://i.pinimg.com/236x/ad/58/d8/ad58d82c6044628404141c139208afa0.jpg",
-    "https://i.pinimg.com/236x/c8/46/01/c846014a90f7478c2c6c88e53f80b186.jpg",
-    "https://i.pinimg.com/236x/8e/b7/55/8eb755d16b2c2bd0b301f07f28048112.jpg",
-    "https://i.pinimg.com/236x/91/41/41/914141f1d8df24c24e1c3e4118d1c6f2.jpg"
-  ];
+  List<String> images = List.generate(10, (index) => "Sản phầm " + index.toString());
+
+  HomeModel homeModel = new HomeModel();
+
+  
+
+  @override
+  void setState(fn) async {
+    // TODO: implement setState
+    super.setState(fn);
+  }
 
   @override
   void initState(){
+
     super.initState();
     controller = new ScrollController()..addListener(_listenScroll);
   }
@@ -194,7 +201,7 @@ class _HomePageState extends State<HomePage> {
             _showSearchModal(context);
           },
         ),
-        body: SafeArea(child: listProductHome()),
+        body: listProductHome(),
         bottomNavigationBar: BottomNavigationBar(
           onTap: _onTapTapped,
           currentIndex: _currentIndex,
@@ -235,7 +242,10 @@ class _HomePageState extends State<HomePage> {
                   controller: controller,
                   itemCount: images.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _categoryProduce(context, index < 5 ? index : index - (5 * (index ~/ 5)));
+                    if(homeModel.listProduct.data.isEmpty)
+                      return CircularProgressIndicator();
+                    else
+                      return _categoryProduce(context, index < 15 ? index : index - (15 * (index ~/ 15)));
                   })),
           Padding(
             padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
@@ -255,6 +265,9 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 itemCount: 3,
                 itemBuilder: (BuildContext context, int index) {
+                  if(homeModel.listProduct.data.isEmpty)
+                    return CircularProgressIndicator();
+                  else
                   return _featureProduct(context,index);
                 },
               )),
@@ -262,13 +275,20 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
             child: Text("Top sản phẩm", style: Theme.of(context).textTheme.title,),
           ),
-         _topProduct(),
+          homeModel.listProduct.data.isEmpty ? CircularProgressIndicator() : _topProduct(),
         ],
       );
 
   Widget _categoryProduce(BuildContext context, int index) {
     return new InkWell(
-      onTap: () {},
+      onTap: () {
+        showDialog(context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            content: Text('${homeModel.listProduct.data}'),
+          );
+        });
+      },
       child: Column(
         children: <Widget>[
           Container(
@@ -277,7 +297,7 @@ class _HomePageState extends State<HomePage> {
               color: Colors.black12,
               image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                      images[index]),
+                      homeModel.listProduct.data[index].image),
                   fit: BoxFit.cover),
             ),
             alignment: Alignment.center,
@@ -288,7 +308,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 10,
           ),
-          Text("Raperri " + index.toString()),
+          Text(homeModel.listProduct.data[index].name.toString() + " " + index.toString()),
         ],
       ),
     );
@@ -350,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey,
                       image: DecorationImage(
-                          image: CachedNetworkImageProvider(images[0]),
+                          image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
                           fit: BoxFit.cover)),
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -388,7 +408,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey,
                       image: DecorationImage(
-                          image: CachedNetworkImageProvider(images[0]),
+                          image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
                           fit: BoxFit.cover)),
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -439,7 +459,7 @@ class _HomePageState extends State<HomePage> {
               autoplay: true,
               itemCount: 4,
               itemBuilder: (BuildContext context, int index){
-                return new Image(image: CachedNetworkImageProvider(images[index]),
+                return new Image(image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
                 fit: BoxFit.cover,);
               },
             )
