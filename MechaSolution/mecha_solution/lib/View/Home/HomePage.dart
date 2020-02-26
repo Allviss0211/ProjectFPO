@@ -2,14 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:mecha_solution/Model/ProductFolder/Product.dart';
-import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
-import 'package:mecha_solution/Repo/ProductRepo.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
-import 'package:mecha_solution/View/SignIn/ProductSrceen.dart';
-import 'package:mecha_solution/View/SignIn/ProductSrceen.dart';
-import 'package:mecha_solution/data/ProductRepoImlp.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -23,10 +16,6 @@ class _HomePageState extends State<HomePage> {
   static int _count = -1;
   List<String> images = List.generate(10, (index) => "Sản phầm " + index.toString());
 
-  HomeModel homeModel = new HomeModel();
-
-  
-
   @override
   void setState(fn) async {
     // TODO: implement setState
@@ -34,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState(){
+  void initState() {
 
     super.initState();
     controller = new ScrollController()..addListener(_listenScroll);
@@ -125,32 +114,30 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel(
-      model: HomeModel.getInstance(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 25),
-                child: _appBarTitle,
-              ),
-              IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                  iconSize: 30,
-                  onPressed: null),
-            ],
-          ),
-          flexibleSpace: new Container(
-            decoration: BoxDecoration(
-              gradient: new LinearGradient(
-                  colors: [Colors.lightBlue, Colors.black87]),
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: _appBarTitle,
             ),
+            IconButton(
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
+                iconSize: 30,
+                onPressed: null),
+          ],
+        ),
+        flexibleSpace: new Container(
+          decoration: BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [Colors.lightBlue, Colors.black87]),
           ),
+        ),
 //        bottom: PreferredSize(
 //          preferredSize: Size.fromHeight(50),
 //          child: Container(
@@ -180,137 +167,136 @@ class _HomePageState extends State<HomePage> {
 //            ),
 //          ),
 //        ),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              drawerUserHeader(),
-              Column(
-                children: _listOfProduct
-                    .map((expansionTile) => expansionTile)
-                    .toList(),
-              )
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.search),
-          onPressed: () {
-            _showSearchModal(context);
-          },
-        ),
-        body: listProductHome(),
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: _onTapTapped,
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text("Trang chủ"),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              title: Text("Thông báo"),
-            ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            drawerUserHeader(),
+            Column(
+              children: _listOfProduct
+                  .map((expansionTile) => expansionTile)
+                  .toList(),
+            )
           ],
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.search),
+        onPressed: () {
+          _showSearchModal(context);
+        },
+      ),
+      body: ScopedModel(
+          model: HomeModel.getInstance(),
+          child: listProductHome()),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _onTapTapped,
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Trang chủ"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            title: Text("Thông báo"),
+          ),
+        ],
       ),
     );
   }
 
   Widget listProductHome() => ListView(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only( bottom: 10),
-            child: _buildSlider(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
-            child: Text(
-              "Danh sách sản phẩm",
-              style: Theme.of(context).textTheme.title,
-            ),
-          ),
-          Container(
-              width: double.infinity,
-              height: 150,
-              margin: EdgeInsets.only(top: 15),
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  controller: controller,
-                  itemCount: images.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if(homeModel.listProduct.data.isEmpty)
-                      return CircularProgressIndicator();
-                    else
-                      return _categoryProduce(context, index < 15 ? index : index - (15 * (index ~/ 15)));
-                  })),
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
-            child: Text(
-              "Gói combo",
-              style: Theme.of(context).textTheme.title,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-              width: double.infinity,
-              height: 150,
-              margin: EdgeInsets.only(top: 15),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 3,
-                itemBuilder: (BuildContext context, int index) {
-                  if(homeModel.listProduct.data.isEmpty)
-                    return CircularProgressIndicator();
-                  else
-                  return _featureProduct(context,index);
-                },
-              )),
-          Padding(
-            padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
-            child: Text("Top sản phẩm", style: Theme.of(context).textTheme.title,),
-          ),
-          homeModel.listProduct.data.isEmpty ? CircularProgressIndicator() : _topProduct(),
-        ],
-      );
+    children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.only( bottom: 10),
+        child: _buildSlider(),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+        child: Text(
+          "Danh sách sản phẩm",
+          style: Theme.of(context).textTheme.title,
+        ),
+      ),
+      Container(
+          width: double.infinity,
+          height: 150,
+          margin: EdgeInsets.only(top: 15),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              controller: controller,
+              itemCount: images.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _categoryProduce(context, index < 15 ? index : index - (15 * (index ~/ 15)));
+              })),
+      Padding(
+        padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+        child: Text(
+          "Gói combo",
+          style: Theme.of(context).textTheme.title,
+        ),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      Container(
+          width: double.infinity,
+          height: 150,
+          margin: EdgeInsets.only(top: 15),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: images.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _featureProduct(context, index < 15 ? index : index - (5 * (index ~/ 5 )));
+            },
+          )),
+      Padding(
+        padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+        child: Text("Top sản phẩm", style: Theme.of(context).textTheme.title,),
+      ),
+      _topProduct(),
+    ],
+  );
 
   Widget _categoryProduce(BuildContext context, int index) {
-    return new InkWell(
-      onTap: () {
-        showDialog(context: context,
-        builder: (BuildContext context){
-          return AlertDialog(
-            content: Text('${homeModel.listProduct.data}'),
-          );
-        });
+    return ScopedModelDescendant<HomeModel>(
+      builder: (BuildContext context, Widget child, HomeModel homeModel){
+        return InkWell(
+          onTap: () {
+            showDialog(context: context,
+                builder: (BuildContext context){
+                  return AlertDialog(
+                    content: Text('${homeModel.listProduct.data[index].description}'),
+                  );
+                });
+          },
+          child: Column(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black12,
+                  image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                          homeModel.listProduct.data[index].image),
+                      fit: BoxFit.cover),
+                ),
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                width: 100,
+                height: 100,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(homeModel.listProduct.data[index].name.toString() + " " + index.toString()),
+            ],
+          ),
+        );
       },
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.black12,
-              image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                      homeModel.listProduct.data[index].image),
-                  fit: BoxFit.cover),
-            ),
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            width: 100,
-            height: 100,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(homeModel.listProduct.data[index].name.toString() + " " + index.toString()),
-        ],
-      ),
     );
   }
 
@@ -358,114 +344,122 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _topProduct() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey,
-                      image: DecorationImage(
-                          image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
-                          fit: BoxFit.cover)),
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  width: 150,
-                  height: 150,
+    return ScopedModelDescendant<HomeModel>(
+      builder: (BuildContext context, Widget child, HomeModel homeModel){
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                              image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
+                              fit: BoxFit.cover)),
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      width: 150,
+                      height: 150,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Top sản phẩm",
+                      softWrap: true,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "2 củ",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 10,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                              image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
+                              fit: BoxFit.cover)),
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      width: 150,
+                      height: 150,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Top sản phẩm",
+                      softWrap: true,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "2 củ",
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green),
+                    )
+                  ],
                 ),
-                Text(
-                  "Top sản phẩm",
-                  softWrap: true,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "2 củ",
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
-                )
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey,
-                      image: DecorationImage(
-                          image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
-                          fit: BoxFit.cover)),
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  width: 150,
-                  height: 150,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Top sản phẩm",
-                  softWrap: true,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "2 củ",
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildSlider() {
-    return Container(
-      height: 160.0,
-      child: Stack(
-        children: <Widget>[
-          ClipPath(
-            clipper: DiagonalPathClipperOne(),
-          child: Container(
-            height: 110,
-            color: Colors.deepPurpleAccent,
+    return ScopedModelDescendant<HomeModel>(
+      builder: (BuildContext context, Widget child,HomeModel homeModel){
+        return Container(
+          height: 160.0,
+          child: Stack(
+            children: <Widget>[
+              ClipPath(
+                clipper: DiagonalPathClipperOne(),
+                child: Container(
+                  height: 110,
+                  color: Colors.deepPurpleAccent,
+                ),
+              ),
+              Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child : Swiper(
+                    autoplay: true,
+                    itemCount: 4,
+                    itemBuilder: (BuildContext context, int index){
+                      return Image(image: CachedNetworkImageProvider(homeModel.listProduct.data[index].image),
+                        fit: BoxFit.cover,);
+                    },
+                  )
+              )
+            ],
           ),
-          ),
-          Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child : Swiper(
-              autoplay: true,
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index){
-                return new Image(image: CachedNetworkImageProvider(homeModel.listProduct.data[0].image),
-                fit: BoxFit.cover,);
-              },
-            )
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 
