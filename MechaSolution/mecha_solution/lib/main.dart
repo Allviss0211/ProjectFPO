@@ -4,7 +4,7 @@ import 'package:mecha_solution/View/Register/RegisterScreen.dart';
 import 'package:mecha_solution/View/SignIn/SignInScreen.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'View/Home/HomePage.dart';
-
+import 'package:mecha_solution/View/Cart/CartScreen.dart';
 import 'View/SignIn/SignInScreen.dart';
 import 'data/ProductRepoImlp.dart';
 
