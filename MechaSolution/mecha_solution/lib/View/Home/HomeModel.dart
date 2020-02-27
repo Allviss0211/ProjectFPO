@@ -19,13 +19,11 @@ class HomeModel extends Model {
 
 
   HomeModel() {
-    print("da khoi tao get all");
     updateProductView();
   }
 
   void updateProductView() async {
     listProduct = await productRepo.getProductAll();
-    if(listProduct != null) {print("da update product    ${listProduct.data[0].name}");}
     notifyListeners();
   }
 }

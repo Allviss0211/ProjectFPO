@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/data/ProductRepoImlp.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
@@ -6,12 +7,13 @@ import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 
-
 int index = 0;
 
 class DetailProductScreen extends StatelessWidget {
 
   final String productID;
+
+  ProductAPI productAPI = new ProductAPI();
   DetailProductScreen({Key key,this.productID}) : super(key: key);
 
   @override
@@ -22,13 +24,13 @@ class DetailProductScreen extends StatelessWidget {
         title: Text(""),
       ),
       body: FutureBuilder(
-        future: ProductAPI().getProductByID(productID),
+        future: productAPI.getProductByID(productID),
         builder: (context, snapshot) {
           if(snapshot.hasError) {
             print(snapshot.error);
           }
-          print(productID + "    detail");
-          return snapshot.hasData ? DetailProduct(productlist: snapshot.data) : Center(child: CircularProgressIndicator(),);
+          ProductFromAPI product = snapshot.data;
+          return snapshot.hasData ? DetailProduct(productlist: product) : Center(child: CircularProgressIndicator(),);
         },
       ),
     );
@@ -36,7 +38,7 @@ class DetailProductScreen extends StatelessWidget {
 }
 
 class DetailProduct extends StatefulWidget {
-  final Product productlist;
+  final ProductFromAPI productlist;
   DetailProduct({Key key, this.productlist}) : super(key: key);
   @override
   _DetailProductState createState() => _DetailProductState();
@@ -50,11 +52,11 @@ class _DetailProductState extends State<DetailProduct> {
     );
   }
 }
-Widget listProductByID(Product product) {
+Widget listProductByID(ProductFromAPI product) {
   return Column(
     children: <Widget>[
-      Text("${product.id}"),
-      Text("${product.name}"),
+      Text("${product.data.id}"),
+      Text("${product.data.name}"),
     ],
   );
 }
