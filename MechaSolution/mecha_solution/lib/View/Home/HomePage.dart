@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
+import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
 
 class HomePage extends StatelessWidget {
   @override
