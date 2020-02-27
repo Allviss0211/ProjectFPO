@@ -205,19 +205,19 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         title: Text("Giỏ hàng"),
       ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return _CastViewItems(index);
-              },
-              itemCount: 10,
-            ),
-          ),
-          _checkoutSection(),
-        ],
-      ),
+//      body: Column(
+//        children: <Widget>[
+//          Flexible(
+//            child: ListView.builder(
+//              itemBuilder: (context, index) {
+//                return Dismissible(
+//                  //key: Key(ite),
+//                  child: _CastViewItems(index),
+//                  onDismissed: (direction) {
+//                    setState(() {
+//
+//                    });
+//                  },
     );
   }
 }

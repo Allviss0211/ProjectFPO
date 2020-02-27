@@ -22,12 +22,12 @@ class DetailProductScreen extends StatelessWidget {
         title: Text(""),
       ),
       body: FutureBuilder(
-        future: ProductAPI().getListProduct(),
+        future: ProductAPI().getProductByID(productID),
         builder: (context, snapshot) {
           if(snapshot.hasError) {
-            print("error:     " + snapshot.error.toString());
+            print(snapshot.error);
           }
-          print(productID + "    detail  ${index++}");
+          print(productID + "    detail");
           return snapshot.hasData ? DetailProduct(productlist: snapshot.data) : Center(child: CircularProgressIndicator(),);
         },
       ),
@@ -36,7 +36,7 @@ class DetailProductScreen extends StatelessWidget {
 }
 
 class DetailProduct extends StatefulWidget {
-  final ListProduct productlist;
+  final Product productlist;
   DetailProduct({Key key, this.productlist}) : super(key: key);
   @override
   _DetailProductState createState() => _DetailProductState();
@@ -46,7 +46,7 @@ class _DetailProductState extends State<DetailProduct> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: listProductHome(widget.productlist),
+      child: listProductByID(widget.productlist),
     );
   }
 }
@@ -94,7 +94,7 @@ Widget categoryProduct(ListProduct listProduct, int index) {
           height: 100,
         ),
         SizedBox(
-          height: 10,
+          height: 10
         ),
         Text(index.toString() + "    " + listProduct.data[index].name.toString()),
         SizedBox(

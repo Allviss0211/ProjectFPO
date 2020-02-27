@@ -72,7 +72,7 @@ class Product {
     "categoryId": categoryId,
     "tag": tag,
     "rewardPoint": rewardPoint,
-    "inDate": inDate.toIso8601String(),
+    "inDate": inDate,
     "seo": seo,
     "weight": weight,
     "isActive": isActive,

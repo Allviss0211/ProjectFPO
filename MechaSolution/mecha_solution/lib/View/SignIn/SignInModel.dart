@@ -13,14 +13,14 @@ class SignInModel extends Model {
   OauthRepo oauth = OauthRepoImlp();
   String token;
 
-  SignInModel() {
-    updateOauth();
-  }
+//  SignInModel() {
+//    updateOauth();
+//  }
 
-  void updateOauth() async {
-    token = await oauth.getToken();
-    notifyListeners();
-  }
+//  void updateOauth() async {
+//    token = await oauth.getToken();
+//    notifyListeners();
+//  }
 
   static void destroyInstance() {
     _instance = null;

@@ -1,0 +1,349 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
+import 'package:mecha_solution/View/Home/HomeModel.dart';
+import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
+import 'package:mecha_solution/data/remote/ProductAPI.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+class ListHome extends StatefulWidget {
+  @override
+  _ListHomeState createState() => _ListHomeState();
+}
+
+class _ListHomeState extends State<ListHome> {
+  ProductAPI productAPI = new ProductAPI();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: productAPI.getListProduct(),
+      builder: (context, snapshot){
+        if(snapshot.hasError)
+          print(snapshot.error);
+        return snapshot.hasData ? ListProductHome(listProduct: snapshot.data,) : Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
+class ListProductHome extends StatelessWidget {
+  final ListProduct listProduct;
+
+  ListProductHome({Key key, this.listProduct}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<HomeModel>(
+      builder: (BuildContext build,Widget child, HomeModel model){
+        model.listProduct = this.listProduct;
+        return ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Container(
+                height: 160.0,
+                child: Stack(
+                  children: <Widget>[
+                    ClipPath(
+                      clipper: DiagonalPathClipperOne(),
+                      child: Container(
+                        height: 110,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                    ),
+                    Container(
+                        decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
+                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Swiper(
+                          autoplay: true,
+                          itemCount: 4,
+                          itemBuilder: (BuildContext context, int index) {
+                            return new Image(
+                              image: CachedNetworkImageProvider(model.listProduct.data[index].image),
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ))
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+              child: Text(
+                "Danh sách sản phẩm",
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            Container(
+                width: double.infinity,
+                height: 150,
+                margin: EdgeInsets.only(top: 15),
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: model.listProduct.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          print("home    " + model.listProduct.data[index].id );
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => DetailProductScreen(productID: model.listProduct.data[index].id,)));
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black12,
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        model.listProduct.data[index].image),
+                                    fit: BoxFit.cover),
+                              ),
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              width: 100,
+                              height: 100,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(model.listProduct.data[index].name.toString() +
+                                " " +
+                                index.toString()),
+                          ],
+                        ),
+                      );
+                    })),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+              child: Text(
+                "Gói combo",
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+                width: double.infinity,
+                height: 150,
+                margin: EdgeInsets.only(top: 15),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 3,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () {},
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey,
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        "https://i.pinimg.com/236x/c5/71/cf/c571cf3b28768db808492072034e9e0e.jpg"),
+                                    fit: BoxFit.cover)),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            width: 150,
+                            height: 150,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 10,
+                            right: 10,
+                            child: Container(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                              color: Colors.black87,
+                              child: Text(
+                                "Gói combo ${index}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18.0),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                )),
+            Padding(
+              padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+              child: Text(
+                "Top sản phẩm",
+                style: Theme.of(context).textTheme.title,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey,
+                              image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      model.listProduct.data[0].image),
+                                  fit: BoxFit.cover)),
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          width: 150,
+                          height: 150,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Top sản phẩm",
+                          softWrap: true,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "2 củ",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey,
+                              image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      model.listProduct.data[0].image),
+                                  fit: BoxFit.cover)),
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          width: 150,
+                          height: 150,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Top sản phẩm",
+                          softWrap: true,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "2 củ",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+
+class Bottom extends StatefulWidget {
+  @override
+  _BottomState createState() => _BottomState();
+}
+
+class _BottomState extends State<Bottom> {
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      notchMargin: 5,
+      clipBehavior: Clip.antiAlias,
+      shape: CircularNotchedRectangle(),
+      child: BottomNavigationBar(
+        onTap: (int index){ setState(() {
+          _currentIndex = index;
+        });},
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Trang chủ"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            title: Text("Thông báo"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Trang chủ"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            title: Text("Thông báo"),
+          ),
+        ],
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+  }
+}
+
+class GradientBar extends StatefulWidget {
+  @override
+  _GradientBarState createState() => _GradientBarState();
+}
+
+class _GradientBarState extends State<GradientBar> {
+  var list = [Colors.blueAccent,Colors.black87];
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(seconds: 1),
+      decoration: BoxDecoration(gradient: LinearGradient(colors: list)),
+    );
+  }
+}
+
+class SearchBar extends StatefulWidget {
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}

@@ -10,6 +10,7 @@ import 'package:mecha_solution/data/remote/DataFromOauth.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../Register/RegisterScreen.dart';
+import 'package:mecha_solution/data/ProductRepoImlp.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -85,11 +86,10 @@ class _LoginState extends State<Login> {
         onPressed: () async {
 //          String email = await DecodeRepoImpl.GetInstance().getEmail();
 ////          String username = await DecodeRepoImpl.GetInstance().getUserName();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => HomePage()));
-        ProductAPI product = new ProductAPI();
-        product.getProductByID("5e1d5fa7d8ad9c3950820805");
-        product.getListProduct();
+//          Navigator.push(context,
+//              MaterialPageRoute(builder: (context) => HomePage()));
+//        Product pro = ProductRepoImlp.getInstance().getProductByID();
+//        showDialog(context: context, child: AlertDialog(title: Text(pro),));
         });
 
     SignInButton _btnFB = new SignInButton(

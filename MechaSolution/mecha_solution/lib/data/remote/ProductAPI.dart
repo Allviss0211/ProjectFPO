@@ -9,19 +9,19 @@ import 'package:mecha_solution/Model/ProductFolder/UpdateProduct.dart';
 import '../OauthRepoImlp.dart';
 
 class ProductAPI {
-
   Future<Product> getProductByID(String id) async {
     String token = await OauthRepoImlp.getInstance().getToken();
-    var headers = {"x-access-token": token, "Content-Type": "application/json",};
+    //print(token.toString());
+    var headers = {"x-access-token" : token, "Content-Type" : "application/json"};
 
-    var body = json.encode({"productId": id});
+    var body = json.encode({"productId" : "${id}"});
     final responce = await http.post(
         'http://18.139.240.152:3005/product/getById',
         headers: headers,
         body: body);
 
     if (responce.statusCode == 200) {
-      print("responce    " + responce.body);
+      print("responce    " + responce.body.toString());
       return (Product.fromJson(json.decode(responce.body)));
     } else {
       throw Exception('Lỗi load data');
@@ -30,13 +30,13 @@ class ProductAPI {
 
     Future<ListProduct> getListProduct() async {
     String token = await OauthRepoImlp.getInstance().getToken();
-    var headers = {"x-access-token": token};
+    var headers = {"x-access-token": token, };
 
     final responce = await http
         .post('http://18.139.240.152:3005/product/getAll', headers: headers);
 
     if (responce.statusCode == 200) {
-      return (ListProduct.fromJson(json.decode(responce.body)));
+      return ListProduct.fromJson(json.decode(responce.body));
     } else {
       throw Exception('Lỗi load data');
     }
