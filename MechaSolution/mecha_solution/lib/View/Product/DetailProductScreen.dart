@@ -1,108 +1,82 @@
-import 'package:flutter/material.dart';
-import 'package:mecha_solution/View/Home/HomeModel.dart';
-import 'package:mecha_solution/data/ProductRepoImlp.dart';
-import 'package:mecha_solution/data/remote/ProductAPI.dart';
-import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
-import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
+import 'package:mecha_solution/data/remote/ProductAPI.dart';
 
-
-int index = 0;
-
-class DetailProductScreen extends StatelessWidget {
-
+class DetailScreen extends StatefulWidget {
   final String productID;
 
-  ProductAPI productAPI = new ProductAPI();
-  DetailProductScreen({Key key,this.productID}) : super(key: key);
+  DetailScreen({Key key, this.productID}) : super(key: key);
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
 
+class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(""),
-      ),
-      body: FutureBuilder(
-        future: productAPI.getProductByID(productID),
-        builder: (context, snapshot) {
-          if(snapshot.hasError) {
-            print(snapshot.error);
-          }
-          ProductFromAPI product = snapshot.data;
-          return snapshot.hasData ? DetailProduct(productlist: product) : Center(child: CircularProgressIndicator(),);
-        },
-      ),
-    );
-  }
-}
-
-class DetailProduct extends StatefulWidget {
-  final ProductFromAPI productlist;
-  DetailProduct({Key key, this.productlist}) : super(key: key);
-  @override
-  _DetailProductState createState() => _DetailProductState();
-}
-
-class _DetailProductState extends State<DetailProduct> {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: listProductByID(widget.productlist),
-    );
-  }
-}
-Widget listProductByID(ProductFromAPI product) {
-  return Column(
-    children: <Widget>[
-      Text("${product.data.id}"),
-      Text("${product.data.name}"),
-    ],
-  );
-}
-
-
-
-
-
-Widget listProductHome(ListProduct listProduct) {
-  return ListView.builder(
-      itemBuilder: (context, index) {
-        return categoryProduct(listProduct, index);
+    return FutureBuilder(
+      future: ProductAPI().getProductByID(widget.productID),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print(snapshot.error);
+        }
+        ProductFromAPI product = snapshot.data;
+        return snapshot.hasData
+            ? DetailProduct(product: product)
+            : Center(
+                child: CircularProgressIndicator(),
+              );
       },
-      itemCount: listProduct.data.length,
-    scrollDirection: Axis.vertical,
-  );
+    );
+  }
 }
 
-
-Widget categoryProduct(ListProduct listProduct, int index) {
-  return InkWell(
-    onTap: () {},
-    child: Column(
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.black12,
-            image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                    listProduct.data[index].image),
-                fit: BoxFit.cover),
-          ),
-          alignment: Alignment.center,
-          margin: EdgeInsets.symmetric(horizontal: 10),
-          width: 100,
-          height: 100,
+class DetailProduct extends StatelessWidget {
+  final ProductFromAPI product;
+  DetailProduct({Key key, this.product}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(product.data.name),
         ),
-        SizedBox(
-          height: 10
-        ),
-        Text(index.toString() + "    " + listProduct.data[index].name.toString()),
-        SizedBox(
-          height: 10,
-        ),
-      ],
-    ),
-  );
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Image(
+                image: CachedNetworkImageProvider(product.data.image),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    product.data.price.toString() + "\$",
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  Container(
+                    height: 63,
+                    width: 154,
+                    child: RaisedButton(
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.red)),
+                      child: Text('Mua'.toUpperCase(),style: TextStyle(fontSize: 30),),
+                      onPressed: (){},
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ));
+  }
 }

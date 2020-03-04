@@ -1,3 +1,4 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -7,6 +8,8 @@ import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter/services.dart';
+
 
 class ListHome extends StatefulWidget {
   @override
@@ -87,27 +90,29 @@ class ListProductHome extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: model.listProduct.data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
+                      return GestureDetector(
                         onTap: () {
                           print("home    " + model.listProduct.data[index].id );
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => DetailProductScreen(productID: model.listProduct.data[index].id,)));
+                          Navigator.push(context,MaterialPageRoute(builder: (context) => DetailScreen(productID: model.listProduct.data[index].id)));
                         },
                         child: Column(
                           children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.black12,
-                                image: DecorationImage(
-                                    image: CachedNetworkImageProvider(
-                                        model.listProduct.data[index].image),
-                                    fit: BoxFit.cover),
+                            Hero(
+                              tag: 'productImage $index',
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black12,
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          model.listProduct.data[index].image),
+                                      fit: BoxFit.cover),
+                                ),
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                width: 100,
+                                height: 100,
                               ),
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              width: 100,
-                              height: 100,
                             ),
                             SizedBox(
                               height: 10,
@@ -344,6 +349,55 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return scanQR();
+  }
+}
+
+class scanQR extends StatefulWidget {
+  @override
+  _scanQRState createState() => _scanQRState();
+}
+
+class _scanQRState extends State<scanQR> {
+  String result = "Hey there";
+
+  Future _scanQR() async {
+    try {
+      String qrResult = await BarcodeScanner.scan();
+      setState(() {
+        result = qrResult;
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          result = "Camera permission was denied";
+        });
+      } else {
+        setState(() {
+          result = "Unknown Error $ex";
+        });
+      }
+    } on FormatException {
+      setState(() {
+        result = "You pressed the back button before scanning anything";
+      });
+    } catch (ex) {
+      setState(() {
+        result = "Unknown Error $ex";
+      });
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+        child: Icon(Icons.camera_alt),
+    onPressed: () {
+      _scanQR();
+      showDialog(context: context,builder: (BuildContext context){
+        return AlertDialog(title: Text("Thông tin QR"),content: Text('$result'),);
+      });
+    });
   }
 }

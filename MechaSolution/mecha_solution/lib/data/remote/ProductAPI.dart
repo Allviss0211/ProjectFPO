@@ -10,13 +10,11 @@ import '../OauthRepoImlp.dart';
 
 class ProductAPI {
   Future<ProductFromAPI> getProductByID(String id) async {
-    String token = await OauthRepoImlp.getInstance().getToken();
-    var headers = {"x-access-token" : token, "Content-Type" : "application/json "};
-
+    var header = {"Content-Type": "application/json"};
     var body = json.encode({"productId" : "${id}"});
     final responce = await http.post(
-        'http://18.139.240.152:3005/product/getById',
-        headers: headers,
+        'http://18.139.240.152:3005/product/getByIdPublic',
+        headers: header,
         body: body);
 
     if (responce.statusCode == 200) {
@@ -27,11 +25,9 @@ class ProductAPI {
   }
 
     Future<ListProduct> getListProduct() async {
-    String token = await OauthRepoImlp.getInstance().getToken();
-    var headers = {"x-access-token": token, };
 
     final responce = await http
-        .post('http://18.139.240.152:3005/product/getAll', headers: headers);
+        .post('http://18.139.240.152:3005/product/getAllPublic',);
 
     if (responce.statusCode == 200) {
       return ListProduct.fromJson(json.decode(responce.body));

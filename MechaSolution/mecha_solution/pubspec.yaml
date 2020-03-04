@@ -32,6 +32,8 @@ dependencies:
   flutter_signin_button: 1.0.0
   datetime_picker_formfield: ^1.0.0
   scoped_model: ^1.0.1
+  barcode_scan: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

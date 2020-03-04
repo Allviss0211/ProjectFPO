@@ -1,11 +1,14 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
-import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatelessWidget {
+  String result;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,10 +19,17 @@ class HomePage extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              SizedBox(width: 25,),
+              SizedBox(
+                width: 25,
+              ),
               Padding(
                 padding: const EdgeInsets.only(right: 25),
-                child: Center(child: Text("Mechasolution",style: TextStyle(fontSize: 37,color: Colors.white),),),
+                child: Center(
+                  child: Text(
+                    "Mechasolution",
+                    style: TextStyle(fontSize: 37, color: Colors.white),
+                  ),
+                ),
               ),
               IconButton(
                   icon: Icon(
@@ -40,10 +50,9 @@ class HomePage extends StatelessWidget {
             child: ListHome()),
         bottomNavigationBar: Bottom(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.search),
-        ),
+        floatingActionButton: SearchBar(),
       ),
     );
   }
 }
+
