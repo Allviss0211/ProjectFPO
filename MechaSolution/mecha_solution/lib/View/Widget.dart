@@ -12,6 +12,9 @@ import 'package:flutter/services.dart';
 
 
 class ListHome extends StatefulWidget {
+  final String token;
+  ListHome({Key key, this.token}) : super(key: key);
+
   @override
   _ListHomeState createState() => _ListHomeState();
 }
@@ -60,7 +63,7 @@ class ListProductHome extends StatelessWidget {
                     Container(
                         decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
-                        padding: EdgeInsets.symmetric(horizontal: 20.0),
+                        padding: EdgeInsets.symmetric(horizontal: 0.0),
                         child: Swiper(
                           autoplay: true,
                           itemCount: 4,
@@ -92,8 +95,8 @@ class ListProductHome extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
-                          print("home    " + model.listProduct.data[index].id );
-                          Navigator.push(context,MaterialPageRoute(builder: (context) => DetailScreen(productID: model.listProduct.data[index].id)));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => DetailProductScreen(productID: model.listProduct.data[index].id,)));
                         },
                         child: Column(
                           children: <Widget>[
@@ -218,16 +221,6 @@ class ListProductHome extends StatelessWidget {
                           "Top sản phẩm",
                           softWrap: true,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "2 củ",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green),
-                        )
                       ],
                     ),
                   ),
@@ -257,16 +250,6 @@ class ListProductHome extends StatelessWidget {
                           "Top sản phẩm",
                           softWrap: true,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "2 củ",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green),
-                        )
                       ],
                     ),
                   ),
@@ -296,22 +279,16 @@ class _BottomState extends State<Bottom> {
       clipBehavior: Clip.antiAlias,
       shape: CircularNotchedRectangle(),
       child: BottomNavigationBar(
-        onTap: (int index){ setState(() {
+        onTap: (index){ setState(() {
           _currentIndex = index;
         });},
+        selectedItemColor: Colors.deepOrange,
         currentIndex: _currentIndex,
-        items: [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             title: Text("Trang chủ"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            title: Text("Thông báo"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("Trang chủ"),
+
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),

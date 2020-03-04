@@ -1,6 +1,7 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
+import 'package:mecha_solution/View/QRScanner.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
@@ -46,7 +47,7 @@ class HomePage extends StatelessWidget {
           flexibleSpace: GradientBar(),
         ),
         body: ScopedModel(
-            model: HomeModel(),
+            model: HomeModel.getInstance(),
             child: ListHome()),
         bottomNavigationBar: Bottom(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

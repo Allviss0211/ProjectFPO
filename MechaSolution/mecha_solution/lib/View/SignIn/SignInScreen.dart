@@ -7,6 +7,7 @@ import 'package:mecha_solution/View/SignIn/SignInModel.dart';
 import 'package:mecha_solution/data/DecodeRepoImpl.dart';
 import 'package:mecha_solution/data/OauthRepoImlp.dart';
 import 'package:mecha_solution/data/remote/DataFromOauth.dart';
+import 'package:mecha_solution/data/remote/OauthFromAPI.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../Register/RegisterScreen.dart';
@@ -83,13 +84,23 @@ class _LoginState extends State<Login> {
           "Đăng nhập",
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
-        onPressed: () async {
-//          String email = await DecodeRepoImpl.GetInstance().getEmail();
-////          String username = await DecodeRepoImpl.GetInstance().getUserName();
+        onPressed: () {
+          FutureBuilder(
+            future: OauthAPI().fecthOauthModel(),
+            builder: (context, snapshot){
+              if(snapshot.hasError)
+                print(snapshot.error);
+              print(snapshot.data);
+              return snapshot.hasData ? Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomePage(token: snapshot.data,))) : Center(child: CircularProgressIndicator());
+            },
+          );
+
+//          String token = await OauthRepoImlp.getInstance().getToken();
+//          print(token);
 //          Navigator.push(context,
-//              MaterialPageRoute(builder: (context) => HomePage()));
-//        Product pro = ProductRepoImlp.getInstance().getProductByID();
-//        showDialog(context: context, child: AlertDialog(title: Text(pro),));
+//              MaterialPageRoute(builder: (context) => HomePage(token: token,)));
+
         });
 
     SignInButton _btnFB = new SignInButton(

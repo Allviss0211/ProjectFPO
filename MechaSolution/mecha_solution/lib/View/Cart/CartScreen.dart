@@ -13,8 +13,12 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  
-  Widget _CastViewItems(int index) {
+  List<String> listItems =
+      List.generate(5, (i) => "Raspberry ${i}");
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+
+
+  Widget _CastViewItems(int index, String name) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.0),
@@ -30,13 +34,11 @@ class _CartScreenState extends State<CartScreen> {
             decoration: BoxDecoration(
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                   "https://mechasolution.vn/source/product/raspberry-pi-4/4295-05.jpg"
-                        ),
+                      "https://mechasolution.vn/source/product/raspberry-pi-4/4295-05.jpg"),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(width: 0.3)
-            ),
+                border: Border.all(width: 0.3)),
           ),
           Flexible(
             child: Padding(
@@ -47,7 +49,7 @@ class _CartScreenState extends State<CartScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "Raspberry ${index.toString()}",
+                        name.toString(),
                         overflow: TextOverflow.fade,
                         softWrap: true,
                         style: TextStyle(
@@ -144,7 +146,9 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 10,)
+                      SizedBox(
+                        width: 10,
+                      )
                     ],
                   ),
                 ],
@@ -174,7 +178,10 @@ class _CartScreenState extends State<CartScreen> {
                   Spacer(),
                   Text(
                     "\$800",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.red),
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red),
                   )
                 ],
               )),
@@ -185,14 +192,18 @@ class _CartScreenState extends State<CartScreen> {
                 width: double.infinity,
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   color: Colors.red,
                   splashColor: Colors.redAccent,
-                  child: Text("Thanh toán", style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w400),),
+                  child: Text(
+                    "Thanh toán",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400),
+                  ),
                   onPressed: () {},
-                )
-            ),
+                )),
           ),
         ],
       ),
@@ -202,24 +213,55 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
-        title: Text("Giỏ hàng"),
+        title: Text("Giỏ hàng", style: TextStyle(color: Colors.white,),),
       ),
-//      body: Column(
-//        children: <Widget>[
-//          Flexible(
-//            child: ListView.builder(
-//              itemBuilder: (context, index) {
-//                return Dismissible(
-//                  //key: Key(ite),
-//                  child: _CastViewItems(index),
-//                  onDismissed: (direction) {
-//                    setState(() {
-//
-//                    });
-//                  },
+      body: Column(
+        children: <Widget>[
+          Flexible(
+            child: ListView.builder(
+                itemCount: listItems.length,
+                itemBuilder: (context, index) {
+                  final item = listItems[index];
+                return Dismissible(
+                  key: Key(item),
+                  background: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    color: Colors.red.shade500,
+                    child: Icon(Icons.delete, color: Colors.white, size: 30,),
+                    alignment: Alignment.centerLeft,
+                  ),
+                  secondaryBackground: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    color: Colors.red.shade500,
+                    child: Icon(Icons.delete, color: Colors.white, size: 30,),
+                    alignment: Alignment.centerRight,
+                  ),
+                  child: _CastViewItems(index, item.toString()),
+                  onDismissed: (direction) {
+                    setState(() {
+                      String deletedItem = listItems.removeAt(index);
+                      _globalKey.currentState..removeCurrentSnackBar()..showSnackBar(SnackBar(
+                        content: Text("${deletedItem.toString()} đã xóa"),
+                        duration: Duration(seconds: 1),
+                        action: SnackBarAction(
+                          label: "Hoàn tác",
+                          onPressed: () {
+                            setState(() {
+                              listItems.insert(index, deletedItem);
+                            });
+                          },
+                        ),
+                      ),);
+                    });
+                  },
+                );
+                }),
+          ),
+          _checkoutSection(),
+        ],
+      ),
     );
   }
 }
-
-

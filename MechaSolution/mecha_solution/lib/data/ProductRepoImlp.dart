@@ -18,12 +18,12 @@ class ProductRepoImlp with ProductRepo {
   ProductAPI productAPI = new ProductAPI();
 
   @override
-  Future<ProductFromAPI> getProductByID(String id) async {
-    return await productAPI.getProductByID(id);
+  Future<Product> getProductByID(String id) async {
+    return await productAPI.getProductByID(id).then((value) => value);
   }
 
   Future<ListProduct> getProductAll() async {
-    return await productAPI.getListProduct();
+    return await productAPI.getListProduct().then((value) => value);
   }
 
   Future<void> createProduct(Product product) async {

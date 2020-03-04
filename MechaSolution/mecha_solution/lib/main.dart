@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
+import 'package:mecha_solution/View/QRScanner.dart';
 import 'package:mecha_solution/View/Register/RegisterScreen.dart';
 import 'package:mecha_solution/View/SignIn/SignInScreen.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
