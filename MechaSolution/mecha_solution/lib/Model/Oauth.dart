@@ -1,17 +1,14 @@
 class OauthModel {
-  int exitcode;
   Data data;
-  String message;
 
-  OauthModel({this.exitcode, this.data, this.message});
+  OauthModel({this.data});
 
   factory OauthModel.fromJson(Map<String, dynamic> json) => OauthModel(
-      exitcode: json["exitcode"],
       data: Data.fromJson(json["data"]),
-      message: json["message"]);
+  );
 
   Map<String, dynamic> toJson() =>
-      {"exitcode": exitcode, "data": data, "message": message};
+      {"data": data,};
 }
 
 class Data {

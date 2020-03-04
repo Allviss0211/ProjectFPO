@@ -24,7 +24,7 @@ class DetailProductScreen extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       body: FutureBuilder(
-        future: productAPI.getProductByID(productID),
+        future: ProductAPI().getProductByID(productID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             print(snapshot.error);
@@ -41,9 +41,15 @@ class DetailProductScreen extends StatelessWidget {
   }
 }
 
+
 class DetailProduct extends StatefulWidget {
   final Product product;
   DetailProduct({Key key, this.product}) : super(key: key);
+  @override
+  _DetailProductState createState() => _DetailProductState();
+}
+
+class _DetailProductState extends State<DetailProduct> {
   @override
   Widget build(BuildContext context) {
     return Stack(

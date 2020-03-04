@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
                 print(snapshot.error);
               print(snapshot.data);
               return snapshot.hasData ? Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HomePage(token: snapshot.data,))) : Center(child: CircularProgressIndicator());
+                  MaterialPageRoute(builder: (context) => HomePage())) : Center(child: CircularProgressIndicator());
             },
           );
 

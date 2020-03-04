@@ -13,7 +13,7 @@ class OauthAPI {
         headers: headers, body: body);
 
     if (responce.statusCode == 200) {
-      return (OauthModel.fromJson(json.decode(responce.body)));
+      return (OauthModel.fromJson(json.decode(responce.body)["data"]));
     } else {
       throw Exception('Lỗi load data: getOauth');
     }

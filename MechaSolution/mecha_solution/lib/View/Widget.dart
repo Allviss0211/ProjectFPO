@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 
 class ListHome extends StatefulWidget {
   final String token;
-  ListHome({Key key, this.token}) : super(key: key);
+    ListHome({Key key, this.token}) : super(key: key);
 
   @override
   _ListHomeState createState() => _ListHomeState();

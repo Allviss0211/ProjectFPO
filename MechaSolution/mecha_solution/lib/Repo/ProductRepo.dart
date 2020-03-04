@@ -4,7 +4,7 @@ import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/UpdateProduct.dart';
 
 abstract class ProductRepo{
-  Future<ProductFromAPI> getProductByID(String id);
+  Future<Product> getProductByID(String id);
 
   Future<ListProduct> getProductAll();
 
