@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
+import 'package:mecha_solution/View/QRScanner.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
 import 'package:mecha_solution/View/Product/DetailProductScreen.dart';
+import 'package:mecha_solution/stogare.dart';
 
 class HomePage extends StatelessWidget {
+  final String token;
+  HomePage({Key key, this.token}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -19,7 +24,7 @@ class HomePage extends StatelessWidget {
               SizedBox(width: 25,),
               Padding(
                 padding: const EdgeInsets.only(right: 25),
-                child: Center(child: Text("Mechasolution",style: TextStyle(fontSize: 37,color: Colors.white),),),
+                child: Center(child: Text("Mechasolution",style: TextStyle(fontSize: 20,color: Colors.white, fontWeight: FontWeight.w300),),),
               ),
               IconButton(
                   icon: Icon(
@@ -36,13 +41,11 @@ class HomePage extends StatelessWidget {
           flexibleSpace: GradientBar(),
         ),
         body: ScopedModel(
-            model: HomeModel(),
+            model: HomeModel.getInstance(),
             child: ListHome()),
         bottomNavigationBar: Bottom(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.search),
-        ),
+        floatingActionButton: QRScanner(),
       ),
     );
   }

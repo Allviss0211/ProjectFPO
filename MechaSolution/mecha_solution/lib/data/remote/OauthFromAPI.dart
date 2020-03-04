@@ -15,7 +15,7 @@ class OauthAPI {
     if (responce.statusCode == 200) {
       return (OauthModel.fromJson(json.decode(responce.body)));
     } else {
-      throw Exception('Lỗi load data');
+      throw Exception('Lỗi load data: getOauth');
     }
   }
 }
