@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:mecha_solution/Model/SignupFolder/SignUp.dart';
-import 'package:mecha_solution/Repo/OauthRepo.dart';
+import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/View/Home/HomePage.dart';
 import 'package:mecha_solution/View/SignIn/SignInModel.dart';
-import 'package:mecha_solution/data/DecodeRepoImpl.dart';
-import 'package:mecha_solution/data/OauthRepoImlp.dart';
-import 'package:mecha_solution/data/remote/DataFromOauth.dart';
 import 'package:mecha_solution/data/remote/OauthFromAPI.dart';
-import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../Register/RegisterScreen.dart';
-import 'package:mecha_solution/data/ProductRepoImlp.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -19,62 +14,64 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool remembers = false;
-  SignUp user;
-  final _emailFocus = FocusNode();
-  final _passwordFocus = FocusNode();
+   @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
 
-  _fieldFocusChange(
+    return ScopedModel<SignInModel>(
+      model: SignInModel(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Text("Đăng nhập"),
+          ),
+        ),
+        body: ScopedModelDescendant<SignInModel>(builder: (context,child,model){
+          return Center(child: LoginScreen(model: model),);
+        },),
+      ),
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget {
+  SignInModel model;
+  LoginScreen({Key key, this.model}) : super(key: key);
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  static bool remembers = false;
+  static SignUp user;
+  static final _emailFocus = FocusNode();
+  static final _passwordFocus = FocusNode();
+
+  final signInModel = SignInModel();
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
+  
+  static _fieldFocusChange(
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   } // đổi field text
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    TextFormField _email = new TextFormField(
-      style: TextStyle(
-        fontSize: 14,
-        color: Colors.lightBlueAccent,
-      ),
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.next,
-      focusNode: _emailFocus,
-      onFieldSubmitted: (term) {
-        _fieldFocusChange(context, _emailFocus, _passwordFocus);
-      },
-      decoration:
-          InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
-      onChanged: (value) {
-        setState(() {
-          try {
-            user.data.username = value.toString();
-          } catch (exception) {
-            user.data.username = '';
-          }
-          //lấy giá trị textfield
-        });
-      },
-    );
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    emailController.addListener((){
+      signInModel.emailSink.add(emailController.text);
+    });
 
-    TextField _pass = new TextField(
-      style: TextStyle(
-        fontSize: 14,
-        color: Colors.lightBlueAccent,
-      ),
-      focusNode: _passwordFocus,
-      decoration:
-          InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder()),
-      obscureText: true,
-      onChanged: (value) {
-        try {
-          user.data.password = value.toString();
-        } catch (exception) {
-          user.data.password = '';
-        }
-      },
-    );
+    passController.addListener((){
+      signInModel.passSink.add(passController.text);
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context) {
 
     RaisedButton _btnLogin = new RaisedButton(
         color: Colors.black,
@@ -82,24 +79,24 @@ class _LoginState extends State<Login> {
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Text(
           "Đăng nhập",
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 16, color: Colors.white,),
         ),
         onPressed: () {
-          FutureBuilder(
-            future: OauthAPI().fecthOauthModel(),
-            builder: (context, snapshot){
-              if(snapshot.hasError)
-                print(snapshot.error);
-              print(snapshot.data);
-              return snapshot.hasData ? Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HomePage())) : Center(child: CircularProgressIndicator());
-            },
-          );
-
-//          String token = await OauthRepoImlp.getInstance().getToken();
-//          print(token);
-//          Navigator.push(context,
-//              MaterialPageRoute(builder: (context) => HomePage(token: token,)));
+//          FutureBuilder(
+//            future: OauthAPI().fecthOauthModel(username, password),
+//            builder: (context, snapshot){
+//              if(snapshot.hasError)
+//                print(snapshot.error);
+//              print(snapshot.data);
+//              return snapshot.hasData ? Navigator.push(context,
+//                  MaterialPageRoute(builder: (context) => HomePage())) : Center(child: CircularProgressIndicator());
+//            },
+//          );
+//
+////          String token = await OauthRepoImlp.getInstance().getToken();
+////          print(token);
+////          Navigator.push(context,
+////              MaterialPageRoute(builder: (context) => HomePage(token: token,)));
 
         });
 
@@ -129,13 +126,32 @@ class _LoginState extends State<Login> {
             print(remembers);
           });
         });
-    ListView list = new ListView(shrinkWrap: true, children: <Widget>[
+
+    return ListView(shrinkWrap: true, children: <Widget>[
       Padding(
         padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
         child: Container(
-          height: 48,
-          width: 343,
-          child: _email,
+          child: StreamBuilder<String>(
+            stream: signInModel.emailStream,
+            builder: (context, snapshot) {
+              return TextFormField(
+                controller: emailController,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.lightBlueAccent,
+                ),
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                focusNode: _emailFocus,
+                onFieldSubmitted: (term) {
+                  _fieldFocusChange(context, _emailFocus, _passwordFocus);
+                },
+                decoration:
+                InputDecoration(labelText: "E-mail", border: OutlineInputBorder(),
+                errorText: snapshot.data),
+              );
+            }
+          ),
         ),
       ),
       Padding(
@@ -143,7 +159,23 @@ class _LoginState extends State<Login> {
         child: Container(
           height: 48,
           width: 343,
-          child: _pass,
+          child: StreamBuilder<String>(
+            stream: signInModel.passStream,
+            builder: (context, snapshot) {
+              return TextFormField(
+                controller: passController,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.lightBlueAccent,
+                ),
+                focusNode: _passwordFocus,
+                decoration:
+                InputDecoration(labelText: "Mật khẩu", border: OutlineInputBorder(),
+                errorText: snapshot.data),
+                obscureText: true,
+              );
+            }
+          ),
         ),
       ),
       Row(
@@ -227,14 +259,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     ]);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text("Đăng nhập"),
-        ),
-      ),
-      body: Center(child: list),
-    );
   }
 }

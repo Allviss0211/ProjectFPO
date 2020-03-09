@@ -35,7 +35,7 @@ dependencies:
   barcode_scan: ^2.0.1
   sliding_up_panel: ^1.0.0
   sliding_sheet: ^0.2.8
-
+  rxdart: ^0.23.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

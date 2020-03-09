@@ -8,7 +8,7 @@ import 'package:mecha_solution/data/OauthRepoImlp.dart';
 
 class DataAPI {
   Future<Decode> fetchInfo() async {
-    String token = await OauthRepoImlp.getInstance().getToken();
+    String token;
     var headers = {"Content-Type": "application/json", "x-access-token": token};
     final responce = await http.post('http://18.139.240.152:3005/system/decode',
         headers: headers);

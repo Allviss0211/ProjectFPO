@@ -13,7 +13,7 @@ class ProductAPI {
     //String token = await OauthRepoImlp.getInstance().getToken();
     var headers = {"Content-Type" : "application/json"};
 
-    var body = json.encode({"productId" : "${id}"});
+    var body = json.encode({"productId" : "$id"});
     final responce = await http.post(
         'http://18.139.240.152:3005/product/getByIdPublic',
         headers: headers,
@@ -40,7 +40,7 @@ class ProductAPI {
   }
 
   Future<CreatProduct> createProduct(Product product) async {
-    String token = await OauthRepoImlp.getInstance().getToken();
+    String token;
     var headers = {"x-access-token": token};
 
     var body = {
@@ -76,7 +76,7 @@ class ProductAPI {
   }
 
   Future<UpdateProduct> updateProduct(Product product) async {
-    String token = await OauthRepoImlp.getInstance().getToken();
+    String token;
     var headers = {"x-access-token": token};
 
     var body = {
@@ -112,7 +112,7 @@ class ProductAPI {
   }
 
   Future<Product> deleteProduct(String id) async {
-    String token = await OauthRepoImlp.getInstance().getToken();
+    String token;
     var headers = {"Content-Type": "application/json", "x-access-token": token};
 
     var body = json.encode({"productId": id});

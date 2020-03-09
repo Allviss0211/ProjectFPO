@@ -1,24 +1,12 @@
-class OauthModel {
-  Data data;
 
-  OauthModel({this.data});
-
-  factory OauthModel.fromJson(Map<String, dynamic> json) => OauthModel(
-      data: Data.fromJson(json["data"]),
-  );
-
-  Map<String, dynamic> toJson() =>
-      {"data": data,};
-}
-
-class Data {
+class Token {
   String token;
 
-  Data({
+  Token({
     this.token,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Token.fromJson(Map<String, dynamic> json) => Token(
         token: json["token"],
       );
 
