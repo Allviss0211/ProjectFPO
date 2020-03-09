@@ -10,11 +10,7 @@ import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/services.dart';
 
-
 class ListHome extends StatefulWidget {
-  final String token;
-    ListHome({Key key, this.token}) : super(key: key);
-
   @override
   _ListHomeState createState() => _ListHomeState();
 }
@@ -26,10 +22,13 @@ class _ListHomeState extends State<ListHome> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: productAPI.getListProduct(),
-      builder: (context, snapshot){
-        if(snapshot.hasError)
-          print(snapshot.error);
-        return snapshot.hasData ? ListProductHome(listProduct: snapshot.data,) : Center(child: CircularProgressIndicator());
+      builder: (context, snapshot) {
+        if (snapshot.hasError) print(snapshot.error);
+        return snapshot.hasData
+            ? ListProductHome(
+                listProduct: snapshot.data,
+              )
+            : Center(child: CircularProgressIndicator());
       },
     );
   }
@@ -37,44 +36,37 @@ class _ListHomeState extends State<ListHome> {
 
 class ListProductHome extends StatelessWidget {
   final ListProduct listProduct;
-
   ListProductHome({Key key, this.listProduct}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<HomeModel>(
-      builder: (BuildContext build,Widget child, HomeModel model){
+      builder: (BuildContext build, Widget child, HomeModel model) {
         model.listProduct = this.listProduct;
         return ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
               child: Container(
-                height: 160.0,
-                child: Stack(
-                  children: <Widget>[
-                    ClipPath(
-                      clipper: DiagonalPathClipperOne(),
-                      child: Container(
-                        height: 110,
-                        color: Colors.deepPurpleAccent,
+                height: MediaQuery.of(context).size.height / 4,
+                child: Swiper(
+                  viewportFraction: 0.8,
+                  scale: 0.9,
+                  autoplay: true,
+                  itemCount: 4,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(width: 0.5),
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(
+                              model.listProduct.data[index].image),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Container(
-                        decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(45.0)),
-                        padding: EdgeInsets.symmetric(horizontal: 0.0),
-                        child: Swiper(
-                          autoplay: true,
-                          itemCount: 4,
-                          itemBuilder: (BuildContext context, int index) {
-                            return new Image(
-                              image: CachedNetworkImageProvider(model.listProduct.data[index].image),
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ))
-                  ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -95,34 +87,36 @@ class ListProductHome extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => DetailProductScreen(productID: model.listProduct.data[index].id,)));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailProductScreen(
+                                        productID:
+                                            model.listProduct.data[index].id,
+                                      )));
                         },
                         child: Column(
                           children: <Widget>[
-                            Hero(
-                              tag: 'productImage $index',
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.black12,
-                                  image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                          model.listProduct.data[index].image),
-                                      fit: BoxFit.cover),
-                                ),
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 10),
-                                width: 100,
-                                height: 100,
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black12,
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        model.listProduct.data[index].image),
+                                    fit: BoxFit.cover),
                               ),
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              width: 100,
+                              height: 100,
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Text(model.listProduct.data[index].name.toString() +
-                                " " +
-                                index.toString()),
+                            Text(
+                              model.listProduct.data[index].name,
+                            ),
                           ],
                         ),
                       );
@@ -143,7 +137,7 @@ class ListProductHome extends StatelessWidget {
                 margin: EdgeInsets.only(top: 15),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
+                  itemCount: 10,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {},
@@ -167,11 +161,11 @@ class ListProductHome extends StatelessWidget {
                             left: 10,
                             right: 10,
                             child: Container(
-                              padding:
-                              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 16.0),
                               color: Colors.black87,
                               child: Text(
-                                "Gói combo ${index}",
+                                "Gói combo ${index.toString()}",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
@@ -195,65 +189,48 @@ class ListProductHome extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
+              height: MediaQuery.of(context).size.height / 2,
+              child: GridView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: model.listProduct.data.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailProductScreen(
+                                    productID: model.listProduct.data[index].id,
+                                  )));
+                    },
                     child: Column(
                       children: <Widget>[
                         Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey,
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      model.listProduct.data[0].image),
-                                  fit: BoxFit.cover)),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.black12,
+                            image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                    model.listProduct.data[index].image),
+                                fit: BoxFit.cover),
+                          ),
                           alignment: Alignment.center,
                           margin: EdgeInsets.symmetric(horizontal: 10),
-                          width: 150,
-                          height: 150,
+                          width: 100,
+                          height: 100,
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        Text(
-                          "Top sản phẩm",
-                          softWrap: true,
-                        ),
+                        Text(model.listProduct.data[index].name.toString() +
+                            " " +
+                            index.toString()),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey,
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      model.listProduct.data[0].image),
-                                  fit: BoxFit.cover)),
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          width: 150,
-                          height: 150,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Top sản phẩm",
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ],
@@ -262,7 +239,6 @@ class ListProductHome extends StatelessWidget {
     );
   }
 }
-
 
 class Bottom extends StatefulWidget {
   @override
@@ -279,16 +255,17 @@ class _BottomState extends State<Bottom> {
       clipBehavior: Clip.antiAlias,
       shape: CircularNotchedRectangle(),
       child: BottomNavigationBar(
-        onTap: (index){ setState(() {
-          _currentIndex = index;
-        });},
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         selectedItemColor: Colors.deepOrange,
         currentIndex: _currentIndex,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             title: Text("Trang chủ"),
-
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
@@ -307,7 +284,7 @@ class GradientBar extends StatefulWidget {
 }
 
 class _GradientBarState extends State<GradientBar> {
-  var list = [Colors.blueAccent,Colors.black87];
+  var list = [Color(0xFF014F82), Color(0xff00395f), Color(0xFF001726)];
 
   @override
   Widget build(BuildContext context) {
@@ -363,18 +340,281 @@ class _scanQRState extends State<scanQR> {
         result = "Unknown Error $ex";
       });
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
         child: Icon(Icons.camera_alt),
-    onPressed: () {
-      _scanQR();
-      showDialog(context: context,builder: (BuildContext context){
-        return AlertDialog(title: Text("Thông tin QR"),content: Text('$result'),);
-      });
-    });
+        onPressed: () {
+          _scanQR();
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Thông tin QR"),
+                  content: Text('$result'),
+                );
+              });
+        });
   }
 }
+
+/*
+Container(
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey,
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        model.listProduct.data[0].image),
+                                    fit: BoxFit.cover)),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            width: 150,
+                            height: 150,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Top sản phẩm",
+                            softWrap: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey,
+                                image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                        model.listProduct.data[0].image),
+                                    fit: BoxFit.cover)),
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            width: 150,
+                            height: 150,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Top sản phẩm",
+                            softWrap: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+ */
+
+/*
+ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 4 + 25,
+                    child: Swiper(
+                      autoplay: true,
+                      itemCount: 4,
+                      itemBuilder: (BuildContext context, int index) {
+                        return new Image(
+                          image: CachedNetworkImageProvider(
+                              model.listProduct.data[index].image),
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                  child: Text(
+                    "Danh sách sản phẩm",
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                ),
+                Container(
+                    width: double.infinity,
+                    height: 150,
+                    margin: EdgeInsets.only(top: 15),
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: model.listProduct.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailProductScreen(
+                                        productID:
+                                        model.listProduct.data[index].id,
+                                      )));
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                Hero(
+                                  tag: 'productImage $index',
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black12,
+                                      image: DecorationImage(
+                                          image: CachedNetworkImageProvider(model
+                                              .listProduct.data[index].image),
+                                          fit: BoxFit.cover),
+                                    ),
+                                    alignment: Alignment.center,
+                                    margin: EdgeInsets.symmetric(horizontal: 10),
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(model.listProduct.data[index].name
+                                    .toString() +
+                                    " " +
+                                    index.toString()),
+                              ],
+                            ),
+                          );
+                        })),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+                  child: Text(
+                    "Gói combo",
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                    width: double.infinity,
+                    height: 150,
+                    margin: EdgeInsets.only(top: 15),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 3,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {},
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey,
+                                    image: DecorationImage(
+                                        image: CachedNetworkImageProvider(
+                                            "https://i.pinimg.com/236x/c5/71/cf/c571cf3b28768db808492072034e9e0e.jpg"),
+                                        fit: BoxFit.cover)),
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                width: 150,
+                                height: 150,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 10,
+                                right: 10,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 16.0),
+                                  color: Colors.black87,
+                                  child: Text(
+                                    "Gói combo ${index}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18.0),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    )),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+                  child: Text(
+                    "Top sản phẩm",
+                    style: Theme.of(context).textTheme.title,
+                  ),
+                ),
+                Container(
+                  height: double.infinity,
+                  child: GridView.builder(
+                    itemCount: model.listProduct.data.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailProductScreen(
+                                    productID:
+                                    model.listProduct.data[index].id,
+                                  )));
+                        },
+                        child: Column(
+                          children: <Widget>[
+                            Hero(
+                              tag: 'productImage $index',
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black12,
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(model
+                                          .listProduct.data[index].image),
+                                      fit: BoxFit.cover),
+                                ),
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                width: 100,
+                                height: 100,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(model.listProduct.data[index].name
+                                .toString() +
+                                " " +
+                                index.toString()),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+ */

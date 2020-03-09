@@ -1,15 +1,11 @@
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Home/HomeModel.dart';
-import 'package:mecha_solution/View/QRScanner.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
-import 'package:flutter/services.dart';
+
 
 class HomePage extends StatelessWidget {
-  String result;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,11 +20,11 @@ class HomePage extends StatelessWidget {
                 width: 25,
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 25),
+                padding: const EdgeInsets.only(left: 20),
                 child: Center(
                   child: Text(
                     "Mechasolution",
-                    style: TextStyle(fontSize: 37, color: Colors.white),
+                    style: TextStyle(fontSize: 30, color: Colors.white, fontFamily: 'Pacifico',),
                   ),
                 ),
               ),

@@ -1,5 +1,4 @@
 import 'package:mecha_solution/data/remote/OauthFromAPI.dart';
-import 'package:mecha_solution/Model/Oauth.dart';
 import 'package:mecha_solution/Repo/OauthRepo.dart';
 
 class OauthRepoImlp with OauthRepo {

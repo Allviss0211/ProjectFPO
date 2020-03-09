@@ -4,7 +4,6 @@ import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:http/http.dart' as http;
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/UpdateProduct.dart';
-import 'package:mecha_solution/Model/ProductFolder/UpdateProduct.dart';
 
 import '../OauthRepoImlp.dart';
 
@@ -13,7 +12,7 @@ class ProductAPI {
     //String token = await OauthRepoImlp.getInstance().getToken();
     var headers = {"Content-Type" : "application/json"};
 
-    var body = json.encode({"productId" : "$id"});
+    var body = json.encode({"productId" : "${id.toString()}"});
     final responce = await http.post(
         'http://18.139.240.152:3005/product/getByIdPublic',
         headers: headers,

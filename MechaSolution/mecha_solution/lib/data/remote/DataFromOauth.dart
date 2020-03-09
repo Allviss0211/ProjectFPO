@@ -2,8 +2,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:mecha_solution/Model/Decode.dart';
-import 'package:mecha_solution/Model/Oauth.dart';
-import 'package:mecha_solution/Repo/OauthRepo.dart';
 import 'package:mecha_solution/data/OauthRepoImlp.dart';
 
 class DataAPI {
