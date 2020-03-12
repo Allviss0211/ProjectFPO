@@ -49,11 +49,10 @@ class CartScreenModel extends Model{
   static ProductSelected testProduct2 = new ProductSelected(id: '1234',name: 'Raspberry 2',price: 300,totalPricePerProduct: 300,image:"https://pbs.twimg.com/profile_images/1174747027986452480/cSlw47L-_400x400.png");
   static ProductSelected testProduct3 = new ProductSelected(id: '1234',name: 'Raspberry 3',price: 200,totalPricePerProduct: 200,image:"https://yt3.ggpht.com/a/AGF-l79230VSZdeHXKwVJ9Jqc0kskW9RDXw3KoYZJQ=s900-c-k-c0xffffffff-no-rj-mo");
 
-  CartScreenModel(){
     updateListProductSelected(listProductSelected);
   }
-
-  List<ProductSelected> listProductSelected = [];
+  CartScreenModel(){
+  List<ProductSelected> listProductSelected = [testProduct1,testProduct2,testProduct3];
   List<String> listProductById = [];
   int _mount = 1;
   int _totalPrice = 0;
@@ -137,3 +136,5 @@ class CartScreenModel extends Model{
     notifyListeners();
   }
 }
+
+List<ProductSelected> listSelected = [];

@@ -22,8 +22,8 @@ void logCart(ProductSelected productSelected) {
 final Color borderColor = Color(0xffd6d6d6);
 
 class CartScreen extends StatefulWidget {
-  final ProductSelected productSelected;
-  CartScreen({Key key, this.productSelected}) : super(key:key);
+  // final ProductSelected productSelected;
+  // CartScreen({Key key, this.productSelected}) : super(key:key);
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -250,11 +250,10 @@ class _CartScreenState extends State<CartScreen> {
             Flexible(
               child: ScopedModelDescendant<CartScreenModel>(
                   builder: (context, child, model) {
-                    model.addProduct(widget.productSelected);
                 return ListView.builder(
-                    itemCount: model.listProductSelected.length,
+                    itemCount: listSelected.length,
                     itemBuilder: (context, index) {
-                      final item = model.listProductSelected[index];
+                      final item = listSelected[index];
                       return Dismissible(
                         key: ObjectKey(item),
                         background: Container(
@@ -279,8 +278,8 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         child: _CastViewItems(index, item.toString()),
                         onDismissed: (direction) {
-                            final deletedItem = model.listProductSelected[index];
-                            model.removeProduct(index);
+                            final deletedItem = listSelected[index];
+                            listSelected.removeAt(index);
                             _globalKey.currentState
                               ..removeCurrentSnackBar()
                               ..showSnackBar(
@@ -297,7 +296,7 @@ class _CartScreenState extends State<CartScreen> {
                                     textColor: Colors.yellow,
                                     label: "Thêm lại",
                                     onPressed: () {
-                                      model.insertProduct(index, deletedItem);
+                                      listSelected.insert(index, deletedItem);
                                     },
                                   ),
                                 ),

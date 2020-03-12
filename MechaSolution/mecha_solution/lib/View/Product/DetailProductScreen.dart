@@ -191,6 +191,25 @@ class _DetailProductState extends State<DetailProduct> {
                   "Chọn mua",
                   style: TextStyle(color: Colors.white, fontSize: 17),
                 ),
+                onPressed: () {
+                  final productSelected = ProductSelected(
+                      id: widget.product.id,
+                      name: widget.product.name,
+                      mount: 1,
+                      price: widget.product.price,
+                      image: widget.product.image,
+                      totalPricePerProduct: widget.product.price);
+                  // CartScreenModel.getInstance().addProduct(
+                  //     CartScreenModel.getInstance().listProductSelected.length, productSelected);
+                  // print(CartScreenModel.getInstance().listProductSelected.length);
+                  // CartScreenModel.getInstance().
+
+                  if (!listSelected.contains(productSelected)) {
+                    listSelected.add(productSelected);
+                  }
+
+                  //Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartScreen(productSelected: productSelected,)));
+                },
                   CartScreenModel().addProductById(widget.product.id, widget.product.name, widget.product.price, widget.product.image);
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartScreen(productSelected: productSelected,)));
               ),
