@@ -1,5 +1,9 @@
+import 'dart:ffi';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mecha_solution/View/Cart/CartScreen.dart';
+import 'package:mecha_solution/View/Cart/CartScreenModel.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 
@@ -146,7 +150,15 @@ class _DetailProductState extends State<DetailProduct> {
                   "Chọn mua",
                   style: TextStyle(color: Colors.white, fontSize: 17),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  CartScreenModel().addProductById(widget.product.id, widget.product.name, widget.product.price, widget.product.image);
+//                  Navigator.push(context,
+//                      MaterialPageRoute(builder: (context) => CartScreen()));
+//                List<int> list1 = [];
+//                List<int> list2 = [1,2,3];
+//                list1.add(null);
+//                print('$list1');
+                },
               ),
             ),
             SizedBox(

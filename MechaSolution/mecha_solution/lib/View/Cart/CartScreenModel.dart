@@ -1,15 +1,36 @@
 
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
+import 'package:mecha_solution/data/DataOnFile.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class productSelected{
    String id;
    int mount;
    String name;
-   int totalPricePerProduct;
    int price;
    String image;
-   productSelected({this.id,this.mount = 1,this.name,this.totalPricePerProduct,this.price,this.image});
+   int totalPricePerProduct;
+   productSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
+
+
+   factory productSelected.fromFile(Map<String, dynamic> file){
+     return productSelected(
+         id: file['id'] as String,
+         mount: file['mount'] as int,
+         name: file['name'] as String,
+         price: file['price'] as int,
+         image: file['image'] as String,
+         totalPricePerProduct: file['totalPricePerProduct'] as int);
+   }
+
+   Map<String, dynamic> toFile() => {
+     "id" : id,
+     "mount" : mount,
+     "name" : name,
+     "price" : price,
+     "image" : image,
+     "totalPricePerProduct" : totalPricePerProduct
+   };
 }
 
 class CartScreenModel extends Model{
@@ -22,30 +43,42 @@ class CartScreenModel extends Model{
 
     return _instance;
   }
+
+  CartScreenModel(){
+    updateListProductSelected(listProductSelected);
+  }
+
   static productSelected testProduct1 = new productSelected(id: '1234',name: 'raperry1',price: 200,image:"https://scontent.fsgn5-4.fna.fbcdn.net/v/t1.0-9/89056507_1190953791079617_4778470602237280256_n.jpg?_nc_cat=102&_nc_sid=07e735&_nc_ohc=ekz85aJqUSkAX-ZgMYN&_nc_ht=scontent.fsgn5-4.fna&oh=456c7f8260cd43c9fb446fca10c3850a&oe=5E95F493");
   static productSelected testProduct2 = new productSelected(id: '1234',name: 'raperry1',price: 300,image:"https://scontent.fsgn5-4.fna.fbcdn.net/v/t1.0-9/89056507_1190953791079617_4778470602237280256_n.jpg?_nc_cat=102&_nc_sid=07e735&_nc_ohc=ekz85aJqUSkAX-ZgMYN&_nc_ht=scontent.fsgn5-4.fna&oh=456c7f8260cd43c9fb446fca10c3850a&oe=5E95F493");
 
-  List<productSelected> listProductSelected = [testProduct1,testProduct2];
+  List<productSelected> listProductSelected = [];
   List<String> listProductById = [];
   int _mount = 1;
   int _totalPrice = 0;
-
+  int sum = 0;
   int Sum(List<productSelected> listProductSelected){
-    //listProductSelected.forEach((item) => _totalPrice =_totalPrice + item.totalPricePerProduct);
-    int sum = 0;
+    //listProductSelected.forEach((item) => _totalPrice =_totalPrice + item.totalPricePerProduct)
     for(int i = 0;i < listProductSelected.length;i++)
       {
         sum = sum + listProductSelected[i].totalPricePerProduct;
       }
     return sum;
   }
-
+  int priceNew;
   get mount => _mount;
   get totalPrice => _totalPrice;
 
+  void updateListProductSelected(List<productSelected> listProductSelected) async{
+    listProductSelected = await readCartProduct();
+    print('$listProductSelected' + ' đã update');
+  }
+
   void addProductById(String id, String name, int price, String image){
-    productSelected newProduct = new productSelected(id: id,name: name,price: price, image: image);
+    productSelected newProduct = new productSelected(id: id,name: name,price: price,totalPricePerProduct: price, image: image);
+    print('${newProduct.id}' + ' in dòng 1');
     listProductSelected.add(newProduct);
+    writeCartProduct(newProduct);
+    print(listProductSelected[0].id);
     notifyListeners();
   }
 
