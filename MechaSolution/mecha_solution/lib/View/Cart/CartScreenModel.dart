@@ -1,4 +1,5 @@
 
+import 'package:http/http.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/data/DataOnFile.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -33,6 +34,7 @@ class productSelected{
    };
 }
 
+
 class CartScreenModel extends Model{
   static CartScreenModel _instance;
 
@@ -43,15 +45,15 @@ class CartScreenModel extends Model{
 
     return _instance;
   }
+  static ProductSelected testProduct1 = new ProductSelected(id: '1234',name: 'Raspberry 1',price: 200,totalPricePerProduct: 200,image:"https://yt3.ggpht.com/a/AGF-l79230VSZdeHXKwVJ9Jqc0kskW9RDXw3KoYZJQ=s900-c-k-c0xffffffff-no-rj-mo");
+  static ProductSelected testProduct2 = new ProductSelected(id: '1234',name: 'Raspberry 2',price: 300,totalPricePerProduct: 300,image:"https://pbs.twimg.com/profile_images/1174747027986452480/cSlw47L-_400x400.png");
+  static ProductSelected testProduct3 = new ProductSelected(id: '1234',name: 'Raspberry 3',price: 200,totalPricePerProduct: 200,image:"https://yt3.ggpht.com/a/AGF-l79230VSZdeHXKwVJ9Jqc0kskW9RDXw3KoYZJQ=s900-c-k-c0xffffffff-no-rj-mo");
 
   CartScreenModel(){
     updateListProductSelected(listProductSelected);
   }
 
-  static productSelected testProduct1 = new productSelected(id: '1234',name: 'raperry1',price: 200,image:"https://scontent.fsgn5-4.fna.fbcdn.net/v/t1.0-9/89056507_1190953791079617_4778470602237280256_n.jpg?_nc_cat=102&_nc_sid=07e735&_nc_ohc=ekz85aJqUSkAX-ZgMYN&_nc_ht=scontent.fsgn5-4.fna&oh=456c7f8260cd43c9fb446fca10c3850a&oe=5E95F493");
-  static productSelected testProduct2 = new productSelected(id: '1234',name: 'raperry1',price: 300,image:"https://scontent.fsgn5-4.fna.fbcdn.net/v/t1.0-9/89056507_1190953791079617_4778470602237280256_n.jpg?_nc_cat=102&_nc_sid=07e735&_nc_ohc=ekz85aJqUSkAX-ZgMYN&_nc_ht=scontent.fsgn5-4.fna&oh=456c7f8260cd43c9fb446fca10c3850a&oe=5E95F493");
-
-  List<productSelected> listProductSelected = [];
+  List<ProductSelected> listProductSelected = [];
   List<String> listProductById = [];
   int _mount = 1;
   int _totalPrice = 0;
@@ -62,9 +64,10 @@ class CartScreenModel extends Model{
       {
         sum = sum + listProductSelected[i].totalPricePerProduct;
       }
+    }
     return sum;
   }
-  int priceNew;
+
   get mount => _mount;
   get totalPrice => _totalPrice;
 
@@ -83,18 +86,29 @@ class CartScreenModel extends Model{
   }
 
   void removeProductById(String id, String name, int price){
-    productSelected newProduct = new productSelected(id: id,name: name,price: price);
+    ProductSelected newProduct = new ProductSelected(id: id,name: name,price: price);
     listProductSelected.remove(newProduct);
     notifyListeners();
   }
 
-  void addProduct(productSelected newProduct){
-    listProductSelected.add(newProduct);
+  void addProduct(ProductSelected newProduct){
+    if(!listProductSelected.contains(newProduct)) {
+      _totalPrice = _totalPrice + newProduct.totalPricePerProduct;
+      listProductSelected.add(newProduct);
+    }
+    notifyListeners();
+  }
+  void insertProduct(int index, ProductSelected newProduct){
+   if(!listProductSelected.contains(newProduct)) {
+      _totalPrice = _totalPrice + newProduct.totalPricePerProduct;
+      listProductSelected.insert(index, newProduct);
+    }
     notifyListeners();
   }
 
-  void removeProduct(productSelected newProduct){
-    listProductSelected.remove(newProduct);
+  void removeProduct(int index){
+    _totalPrice = _Sum(listProductSelected) - listProductSelected[index].totalPricePerProduct;
+    listProductSelected.removeAt(index);
     notifyListeners();
   }
 
@@ -102,7 +116,7 @@ class CartScreenModel extends Model{
     _mount++;
     listProductSelected[index].mount++;
     listProductSelected[index].totalPricePerProduct = listProductSelected[index].mount * listProductSelected[index].price;
-    _totalPrice = Sum(listProductSelected);
+    _totalPrice = _Sum(listProductSelected);
     notifyListeners();
   }
 
@@ -111,9 +125,10 @@ class CartScreenModel extends Model{
     if(listProductSelected[index].mount > 1)
       listProductSelected[index].mount--;
     listProductSelected[index].totalPricePerProduct = listProductSelected[index].mount * listProductSelected[index].price;
-    _totalPrice = Sum(listProductSelected);
+    _totalPrice = _Sum(listProductSelected);
     notifyListeners();
   }
+
 
   void setMount(int mount, int index){
     this._mount = mount;
