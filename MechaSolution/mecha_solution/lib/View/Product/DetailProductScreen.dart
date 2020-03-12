@@ -1,20 +1,37 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mecha_solution/View/Cart/CartScreen.dart';
+import 'package:mecha_solution/View/Home/HomePage.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
-
+import 'package:mecha_solution/View/Cart/CartScreenModel.dart';
+import 'package:scoped_model/scoped_model.dart';
 //import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class DetailProductScreen extends StatefulWidget {
   final String productID;
-  final String token;
-  DetailProductScreen({Key key, this.productID, this.token}) : super(key: key);
+  DetailProductScreen({Key key, this.productID}) : super(key: key);
   @override
   _DetailProductScreenState createState() => _DetailProductScreenState();
 }
 
 class _DetailProductScreenState extends State<DetailProductScreen> {
   var _selection;
+
+  void navigation(int index) {
+    switch (index) {
+      case 0:
+        {
+          Navigator.pop(context);
+        }
+        break;
+      case 1:
+        {
+          Navigator.pushNamed(context, '/cartScreen');
+        }
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,55 +46,78 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
               setState(() {
                 _selection = index;
               });
-              Navigator.pop(context);
+              navigation(_selection);
             },
             itemBuilder: (context) {
               return <PopupMenuEntry<int>>[
-                const PopupMenuItem<int>(
+                PopupMenuItem<int>(
                   value: 0,
-                  child: Text(
-                    "Trang chủ ",
-                    style: TextStyle(color: Colors.white),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.home,
+                        size: 27,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Trang chủ",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
-                const PopupMenuItem<int>(
+                PopupMenuItem<int>(
                   value: 1,
-                  child: Text(
-                    "Danh mục ",
-                    style: TextStyle(color: Colors.white),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.shopping_cart,
+                        size: 27,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Giỏ hàng",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
-                const PopupMenuItem<int>(
-                  value: 2,
-                  child: Text(
-                    "Giỏ hàng ",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const PopupMenuItem<int>(
-                  value: 3,
-                  child: Text(
-                    "Cá nhân ",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+                // PopupMenuItem<int>(
+                //   value: 2,
+                //   child: Row(
+                //     children: <Widget>[
+                //       Icon(Icons.dashboard, size: 27, color: Colors.white,),
+                //       SizedBox(width: 10,),
+                //       Text("Danh mục",style: TextStyle(color: Colors.white),),
+                //     ],
+                //   ),
+                // ),
               ];
             },
           )
         ],
       ),
-      body: FutureBuilder(
-        future: ProductAPI().getProductByID(widget.productID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-          }
-          return snapshot.hasData
-              ? DetailProduct(product: snapshot.data)
-              : Center(
-                  child: CircularProgressIndicator(),
-                );
-        },
+      body: ScopedModel(
+        model: CartScreenModel(),
+        child: FutureBuilder(
+          future: ProductAPI().getProductByID(widget.productID),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+            }
+            return snapshot.hasData
+                ? DetailProduct(product: snapshot.data)
+                : Center(
+                    child: CircularProgressIndicator(),
+                  );
+          },
+        ),
       ),
     );
   }
@@ -95,7 +135,9 @@ class _DetailProductState extends State<DetailProduct> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return ScopedModelDescendant<CartScreenModel>(
+      builder: (context, child, model) {
+        return Stack(
       children: <Widget>[
         ListView(
           children: <Widget>[
@@ -146,7 +188,28 @@ class _DetailProductState extends State<DetailProduct> {
                   "Chọn mua",
                   style: TextStyle(color: Colors.white, fontSize: 17),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  final productSelected = ProductSelected(
+                      id: widget.product.id,
+                      name: widget.product.name,
+                      mount: 1,
+                      price: widget.product.price,
+                      image: widget.product.image,
+                      totalPricePerProduct: widget.product.price);
+                  // CartScreenModel.getInstance().addProduct(
+                  //     CartScreenModel.getInstance().listProductSelected.length, productSelected);
+                  // print(CartScreenModel.getInstance().listProductSelected.length);
+                  // CartScreenModel.getInstance().
+
+                  // if (model.listProductSelected.contains(productSelected) == false) 
+                  // {
+                  //   model.addProduct(productSelected);
+                  //   print(model.listProductSelected.length);
+                  //   model.listProductSelected.forEach((item) => print(item.id));
+                  // }
+
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartScreen(productSelected: productSelected,)));
+                },
               ),
             ),
             SizedBox(
@@ -218,7 +281,9 @@ class _DetailProductState extends State<DetailProduct> {
                                     Container(
                                       padding: const EdgeInsets.all(10.0),
                                       height:
-                                          MediaQuery.of(context).size.height / 4 + 30,
+                                          MediaQuery.of(context).size.height /
+                                                  4 +
+                                              30,
                                       child: Column(
                                         children: <Widget>[
                                           Padding(
@@ -241,12 +306,12 @@ class _DetailProductState extends State<DetailProduct> {
                                                 Text(
                                                   "Nhà cung cấp",
                                                   style:
-                                                      TextStyle(fontSize: 17),
+                                                      TextStyle(fontSize: 15),
                                                 ),
                                                 Text(
                                                   "Mechasolution",
                                                   style:
-                                                      TextStyle(fontSize: 17),
+                                                      TextStyle(fontSize: 15),
                                                 ),
                                               ],
                                             ),
@@ -265,12 +330,12 @@ class _DetailProductState extends State<DetailProduct> {
                                                 Text(
                                                   "Thời gian bảo hành",
                                                   style:
-                                                      TextStyle(fontSize: 17),
+                                                      TextStyle(fontSize: 15),
                                                 ),
                                                 Text(
                                                   "12 tháng",
                                                   style:
-                                                      TextStyle(fontSize: 17),
+                                                      TextStyle(fontSize: 15),
                                                 ),
                                               ],
                                             ),
@@ -279,30 +344,32 @@ class _DetailProductState extends State<DetailProduct> {
                                       ),
                                     ),
                                     Positioned(
-                                            bottom: 10.0,
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                              height: 50,
-                                              width: MediaQuery.of(context).size.width,
-                                              child: RaisedButton(
-                                                elevation: 3,
-                                                color: Color(0xFF0D47A1),
-                                                splashColor:
-                                                    Colors.blue[200],
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0)),
-                                                child: Text(
-                                                  "Tôi đã hiểu",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 17),
-                                                ),
-                                                onPressed: () {Navigator.pop(context);},
-                                              ),
-                                            ),
+                                      bottom: 10.0,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10.0),
+                                        height: 50,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: RaisedButton(
+                                          elevation: 3,
+                                          color: Color(0xFF0D47A1),
+                                          splashColor: Colors.blue[200],
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0)),
+                                          child: Text(
+                                            "Tôi đã hiểu",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18),
                                           ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 );
                               });
@@ -334,7 +401,6 @@ class _DetailProductState extends State<DetailProduct> {
                 ],
               ),
             ),
-
             SizedBox(
               height: 9.0,
             ),
@@ -342,7 +408,6 @@ class _DetailProductState extends State<DetailProduct> {
               thickness: 8.0,
               color: Colors.grey.shade300,
             ),
-
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,7 +444,7 @@ class _DetailProductState extends State<DetailProduct> {
                               context: context,
                               builder: (BuildContext context) {
                                 return Container(
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   height:
                                       MediaQuery.of(context).size.height / 2 +
                                           71,
@@ -388,12 +453,14 @@ class _DetailProductState extends State<DetailProduct> {
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: index % 2 == 1
-                                                ? Colors.grey.shade100
+                                                ? Colors.grey.shade200
                                                 : null,
                                           ),
                                           padding: EdgeInsets.all(10.0),
-                                          child:
-                                              Text("${listDecription[index]}", style: TextStyle(fontSize: 15.0),),
+                                          child: Text(
+                                            "${listDecription[index]}",
+                                            style: TextStyle(fontSize: 15.0),
+                                          ),
                                         );
                                       },
                                       itemCount: listDecription.length),
@@ -427,28 +494,6 @@ class _DetailProductState extends State<DetailProduct> {
                 ),
               ],
             ),
-
-            // ExpansionTile(
-            //   title: Text("Mô tả sản phẩm"),
-            //   children: <Widget>[
-            //     Container(
-            //       padding: const EdgeInsets.all(8.0),
-            //       height: MediaQuery.of(context).size.height / 2,
-            //       child: ListView.builder(
-            //         itemCount: listDecription.length,
-            //         itemBuilder: (context, index) {
-            //           return Container(
-            //             decoration: BoxDecoration(
-            //               color: index % 2 == 1 ? Colors.grey.shade300 : null
-            //             ),
-            //             child: ListTile(title: Text("${listDecription[index]}")),
-            //           );
-            //         }
-            //       ),
-            //     )
-            //   ],
-            // ),
-
             SizedBox(
               height: 9.0,
             ),
@@ -458,52 +503,10 @@ class _DetailProductState extends State<DetailProduct> {
             ),
           ],
         ),
-
-        // SlidingUpPanel(
-        //   renderPanelSheet: true,
-        //   backdropTapClosesPanel: true,
-        //   borderRadius: BorderRadius.only(
-        //       topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-        //   backdropEnabled: true,
-        //   maxHeight: 0.5 + 0.395,
-        //   minHeight: 0.3,
-        //   //color: Colors.black38,
-        //   panel: Container(
-        //     padding: EdgeInsets.all(20.0),
-        //     child: ListView.builder(
-        //       itemBuilder: (context, index) {
-        //         return Container(
-        //           decoration: BoxDecoration(
-        //             color: index % 2 == 1 ? Colors.grey.shade300 : null,
-        //           ),
-        //           padding: EdgeInsets.all(10.0),
-        //           child: Text("${listDecription[index]}"),
-        //         );
-        //       },
-        //       itemCount: listDecription.length,
-        //     ),
-        //   ),
-        //   collapsed: Container(
-        //     height: 25,
-        //     decoration: BoxDecoration(
-        //       color: Colors.lightBlue.shade300,
-        //       borderRadius: BorderRadius.only(
-        //           topLeft: Radius.circular(16), topRight: Radius.circular(16)),
-        //     ),
-        //     alignment: Alignment.centerLeft,
-        //     child: ListTile(
-        //       title: Text(
-        //         "${widget.product.description}",
-        //         style: TextStyle(fontSize: 20),
-        //       ),
-        //       trailing: Icon(
-        //         Icons.arrow_upward,
-        //         size: 30,
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ],
+    );
+  
+      }
     );
   }
 }

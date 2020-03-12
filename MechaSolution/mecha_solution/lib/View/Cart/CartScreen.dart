@@ -6,163 +6,172 @@ import 'package:mecha_solution/data/ProductRepoImlp.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:mecha_solution/View/Widget.dart';
+
+void logCart(ProductSelected productSelected) {
+  print("""
+    ${productSelected.id}, 
+    ${productSelected.name}, 
+    ${productSelected.price}, 
+    ${productSelected.mount}, 
+    ${productSelected.totalPricePerProduct}, 
+    ${productSelected.image}
+    """);
+}
 
 final Color borderColor = Color(0xffd6d6d6);
 
 class CartScreen extends StatefulWidget {
+  final ProductSelected productSelected;
+  CartScreen({Key key, this.productSelected}) : super(key:key);
+
   @override
   _CartScreenState createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  List<String> listItems = List.generate(5, (i) => "Raspberry $i");
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   // ignore: non_constant_identifier_names
   Widget _CastViewItems(int index, String name) {
     return ScopedModelDescendant<CartScreenModel>(
-      builder: (context,child,model){
+      builder: (context,child,model) {
       return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          border: Border.all(color: borderColor, width: 0.5),
-        ),
-        padding: const EdgeInsets.all(0),
-        margin: EdgeInsets.all(8),
-        height: 134,
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: 140,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                        model.listProductSelected[index].image),
-                    fit: BoxFit.cover,
+        margin: const EdgeInsets.all(3),
+        height: 145,
+        child: Card(
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+          ),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 140,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                          model.listProductSelected[index].image),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), bottomLeft: Radius.circular(10.0)),
+                    //border: Border.all(width: 0.3)
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 0.3)),
-            ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          model.listProductSelected[index].name,
-                          overflow: TextOverflow.fade,
-                          softWrap: true,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 16),
-                        ),
-                        Container(
-                            width: 50,
-                            child: IconButton(
-                              color: Colors.red,
-                              icon: Icon(Icons.delete),
-                              iconSize: 25,
-                              onPressed: () {},
-                              splashColor: Colors.red.shade100,
-                            ))
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          "Đơn giá: ",
-                        ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Text(
-                          "\$${model.listProductSelected[index].price}",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w300),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text("Tổng:"),
-                        SizedBox(
-                          width: 37,
-                        ),
-                        Text(
-                          "\$${model.listProductSelected[index].mount * model.listProductSelected[index].price}",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.orangeAccent),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                              //borderRadius: BorderRadius.circular(60),
-                              //border: Border.all(color: borderColor, width: 0.5),
-                              ),
-                          child: InkWell(
-                            onTap: () {
-                              model.decrease(index);
-                            },
-                            splashColor: Colors.red.shade200,
-                            child: Padding(
-                              padding: const EdgeInsets.all(6),
-                              child: Icon(
-                                Icons.remove,
-                                color: Colors.red,
-                                size: 22,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 3,
-                        ),
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("${model.listProductSelected[index].mount}"),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 3,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              //borderRadius: BorderRadius.circular(60),
-                              //border: Border.all(color: borderColor, width: 0.5),
-                              ),
-                          child: InkWell(
-                            onTap: () {
-                              model.increase(index);
-                            },
-                            splashColor: Colors.green.shade200,
-                            child: Padding(
-                              padding: const EdgeInsets.all(6),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.green,
-                                size: 22,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
               ),
-            )
-          ],
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.listProductSelected[index].name,
+                        overflow: TextOverflow.fade,
+                        softWrap: true,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
+                      ),
+                      SizedBox(height: 6,),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            "Đơn giá: ",
+                          ),
+                          SizedBox(
+                            width: 16,
+                          ),
+                          Text(
+                            "\$${model.listProductSelected[index].price}",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w300),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 6,),
+                      Row(
+                        children: <Widget>[
+                          Text("Tổng:"),
+                          SizedBox(
+                            width: 37,
+                          ),
+                          Text(
+                            "\$${model.listProductSelected[index].mount * model.listProductSelected[index].price}",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.orangeAccent),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                                //borderRadius: BorderRadius.circular(60),
+                                //border: Border.all(color: borderColor, width: 0.5),
+                                ),
+                            child: InkWell(
+                              onTap: () {
+                                model.decrease(index);
+                              },
+                              splashColor: Colors.red.shade200,
+                              child: Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Icon(
+                                  Icons.remove,
+                                  color: Colors.red,
+                                  size: 27,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("${model.listProductSelected[index].mount}"),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                //borderRadius: BorderRadius.circular(60),
+                                //border: Border.all(color: borderColor, width: 0.5),
+                                ),
+                            child: InkWell(
+                              onTap: () {
+                                model.increase(index);
+                              },
+                              splashColor: Colors.green.shade200,
+                              child: Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.green,
+                                  size: 27,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          )
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       );}
     );
@@ -228,6 +237,7 @@ class _CartScreenState extends State<CartScreen> {
       child: Scaffold(
         key: _globalKey,
         appBar: AppBar(
+          flexibleSpace: GradientBar(),
           title: Text(
             "Giỏ hàng",
             style: TextStyle(
@@ -240,12 +250,13 @@ class _CartScreenState extends State<CartScreen> {
             Flexible(
               child: ScopedModelDescendant<CartScreenModel>(
                   builder: (context, child, model) {
+                    model.addProduct(widget.productSelected);
                 return ListView.builder(
                     itemCount: model.listProductSelected.length,
                     itemBuilder: (context, index) {
-                      final item = model.listProductSelected[index].id;
+                      final item = model.listProductSelected[index];
                       return Dismissible(
-                        key: Key(item),
+                        key: ObjectKey(item),
                         background: Container(
                           padding: EdgeInsets.symmetric(horizontal: 10.0),
                           color: Colors.red.shade500,
@@ -268,21 +279,25 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         child: _CastViewItems(index, item.toString()),
                         onDismissed: (direction) {
-                            productSelected deletedItem = model.listProductSelected[index];
-                            model.removeProduct(model.listProductSelected[index]);
-                            print('${model.listProductSelected}');
+                            final deletedItem = model.listProductSelected[index];
+                            model.removeProduct(index);
                             _globalKey.currentState
                               ..removeCurrentSnackBar()
                               ..showSnackBar(
                                 SnackBar(
+                                  behavior: SnackBarBehavior.fixed,
                                   content:
-                                      Text("${deletedItem.name.toString()} đã xóa"),
+                                      Container(
+                                        height: 30,
+                                        alignment: Alignment.centerLeft,
+                                        child: Text("${deletedItem.name.toString()} đã xóa",),
+                                      ),
                                   duration: Duration(seconds: 2),
                                   action: SnackBarAction(
-                                    label: "Hoàn tác",
+                                    textColor: Colors.yellow,
+                                    label: "Thêm lại",
                                     onPressed: () {
-                                      model.addProduct(deletedItem);
-                                      print('${model.listProductSelected}');
+                                      model.insertProduct(index, deletedItem);
                                     },
                                   ),
                                 ),
@@ -292,7 +307,8 @@ class _CartScreenState extends State<CartScreen> {
                     });
               }),
             ),
-            _checkoutSection(),
+           
+             _checkoutSection(),
           ],
         ),
       ),

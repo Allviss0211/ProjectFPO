@@ -10,6 +10,10 @@ import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/services.dart';
 
+
+var gradientColor = [Color(0xFF03A9F4),Color(0xFF039BE5),Color(0xFF0288D1),Color(0xFF0277BD),Color(0xFF01579B),];
+
+
 class ListHome extends StatefulWidget {
   @override
   _ListHomeState createState() => _ListHomeState();
@@ -45,29 +49,43 @@ class ListProductHome extends StatelessWidget {
         model.listProduct = this.listProduct;
         return ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height / 4,
-                child: Swiper(
-                  viewportFraction: 0.8,
-                  scale: 0.9,
-                  autoplay: true,
-                  itemCount: 4,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
+            Container(
+              height: MediaQuery.of(context).size.height / 4,
+              child: Stack(
+                children: <Widget>[
+                  ClipPath(
+                    child: Container(
+                      height: 150,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(width: 0.5),
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                              model.listProduct.data[index].image),
-                          fit: BoxFit.cover,
-                        ),
+                        gradient: LinearGradient(colors: gradientColor)
                       ),
-                    );
-                  },
-                ),
+                    ),
+                    clipper: OvalBottomBorderClipper(),
+                  ),
+                  Swiper(
+                    // viewportFraction: 0.85,
+                    // scale: 0.93,
+                    //pagination: new SwiperPagination(alignment: Alignment.bottomCenter,margin: const EdgeInsets.only(top: 30)),
+                    itemWidth: MediaQuery.of(context).size.width,
+                    itemHeight: MediaQuery.of(context).size.height / 5,
+                    layout: SwiperLayout.DEFAULT,
+                    autoplay: true,
+                    itemCount: model.listProduct.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        margin: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                            image: CachedNetworkImageProvider(
+                                model.listProduct.data[index].image),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -194,7 +212,7 @@ class ListProductHome extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: model.listProduct.data.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
+                    crossAxisCount: 2),
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
@@ -284,13 +302,12 @@ class GradientBar extends StatefulWidget {
 }
 
 class _GradientBarState extends State<GradientBar> {
-  var list = [Color(0xFF014F82), Color(0xff00395f), Color(0xFF001726)];
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(seconds: 1),
-      decoration: BoxDecoration(gradient: LinearGradient(colors: list)),
+      decoration: BoxDecoration(gradient: LinearGradient(colors: gradientColor)),
     );
   }
 }
