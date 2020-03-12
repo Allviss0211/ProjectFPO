@@ -14,9 +14,9 @@ Future<File> get _localFile async {
   return File('$path/Cart.txt');
 }
 
-Future<File> writeCartProduct(productSelected product) async {
+Future<File> writeCartProduct(ProductSelected product) async {
   final file = await _localFile;
-  List<productSelected> list = [];
+  List<ProductSelected> list = [];
   if(readCartProduct() != null)
     list = await readCartProduct();
   if(list == null)
@@ -25,7 +25,7 @@ Future<File> writeCartProduct(productSelected product) async {
   return file.writeAsString(jsonEncode(list)); // write data on file
 }
 
-Future<List<productSelected>> readCartProduct() async {
+Future<List<ProductSelected>> readCartProduct() async {
   try {
     final file = await _localFile;
     String content = await file.readAsString();

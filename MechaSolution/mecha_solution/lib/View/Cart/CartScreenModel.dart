@@ -4,18 +4,18 @@ import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/data/DataOnFile.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class productSelected{
+class ProductSelected{
    String id;
    int mount;
    String name;
    int price;
    String image;
    int totalPricePerProduct;
-   productSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
+   ProductSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
 
 
-   factory productSelected.fromFile(Map<String, dynamic> file){
-     return productSelected(
+   factory ProductSelected.fromFile(Map<String, dynamic> file){
+     return ProductSelected(
          id: file['id'] as String,
          mount: file['mount'] as int,
          name: file['name'] as String,
@@ -49,34 +49,31 @@ class CartScreenModel extends Model{
   static ProductSelected testProduct2 = new ProductSelected(id: '1234',name: 'Raspberry 2',price: 300,totalPricePerProduct: 300,image:"https://pbs.twimg.com/profile_images/1174747027986452480/cSlw47L-_400x400.png");
   static ProductSelected testProduct3 = new ProductSelected(id: '1234',name: 'Raspberry 3',price: 200,totalPricePerProduct: 200,image:"https://yt3.ggpht.com/a/AGF-l79230VSZdeHXKwVJ9Jqc0kskW9RDXw3KoYZJQ=s900-c-k-c0xffffffff-no-rj-mo");
 
-    updateListProductSelected(listProductSelected);
-  }
-  CartScreenModel(){
   List<ProductSelected> listProductSelected = [testProduct1,testProduct2,testProduct3];
   List<String> listProductById = [];
   int _mount = 1;
   int _totalPrice = 0;
-  int sum = 0;
-  int Sum(List<productSelected> listProductSelected){
+ 
+  int Sum(List<ProductSelected> listProductSelected){
     //listProductSelected.forEach((item) => _totalPrice =_totalPrice + item.totalPricePerProduct)
-    for(int i = 0;i < listProductSelected.length;i++)
+    int sum = 0;
+    for(int i = 0;i < listProductSelected.length; i++)
       {
         sum = sum + listProductSelected[i].totalPricePerProduct;
       }
-    }
     return sum;
   }
 
   get mount => _mount;
   get totalPrice => _totalPrice;
 
-  void updateListProductSelected(List<productSelected> listProductSelected) async{
+  void updateListProductSelected(List<ProductSelected> listProductSelected) async{
     listProductSelected = await readCartProduct();
     print('$listProductSelected' + ' đã update');
   }
 
   void addProductById(String id, String name, int price, String image){
-    productSelected newProduct = new productSelected(id: id,name: name,price: price,totalPricePerProduct: price, image: image);
+    ProductSelected newProduct = new ProductSelected(id: id,name: name,price: price,totalPricePerProduct: price, image: image);
     print('${newProduct.id}' + ' in dòng 1');
     listProductSelected.add(newProduct);
     writeCartProduct(newProduct);
@@ -106,7 +103,7 @@ class CartScreenModel extends Model{
   }
 
   void removeProduct(int index){
-    _totalPrice = _Sum(listProductSelected) - listProductSelected[index].totalPricePerProduct;
+    _totalPrice = Sum(listProductSelected) - listProductSelected[index].totalPricePerProduct;
     listProductSelected.removeAt(index);
     notifyListeners();
   }
@@ -115,7 +112,7 @@ class CartScreenModel extends Model{
     _mount++;
     listProductSelected[index].mount++;
     listProductSelected[index].totalPricePerProduct = listProductSelected[index].mount * listProductSelected[index].price;
-    _totalPrice = _Sum(listProductSelected);
+    _totalPrice = Sum(listProductSelected);
     notifyListeners();
   }
 
@@ -124,7 +121,7 @@ class CartScreenModel extends Model{
     if(listProductSelected[index].mount > 1)
       listProductSelected[index].mount--;
     listProductSelected[index].totalPricePerProduct = listProductSelected[index].mount * listProductSelected[index].price;
-    _totalPrice = _Sum(listProductSelected);
+    _totalPrice = Sum(listProductSelected);
     notifyListeners();
   }
 

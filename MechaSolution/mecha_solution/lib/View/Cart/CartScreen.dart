@@ -251,9 +251,9 @@ class _CartScreenState extends State<CartScreen> {
               child: ScopedModelDescendant<CartScreenModel>(
                   builder: (context, child, model) {
                 return ListView.builder(
-                    itemCount: listSelected.length,
+                    itemCount: model.listProductSelected.length,
                     itemBuilder: (context, index) {
-                      final item = listSelected[index];
+                      final item = model.listProductSelected[index];
                       return Dismissible(
                         key: ObjectKey(item),
                         background: Container(
@@ -278,8 +278,8 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         child: _CastViewItems(index, item.toString()),
                         onDismissed: (direction) {
-                            final deletedItem = listSelected[index];
-                            listSelected.removeAt(index);
+                            final deletedItem = model.listProductSelected[index];
+                            model.removeProduct(index);
                             _globalKey.currentState
                               ..removeCurrentSnackBar()
                               ..showSnackBar(
@@ -296,7 +296,7 @@ class _CartScreenState extends State<CartScreen> {
                                     textColor: Colors.yellow,
                                     label: "Thêm lại",
                                     onPressed: () {
-                                      listSelected.insert(index, deletedItem);
+                                      model.insertProduct(index, deletedItem);
                                     },
                                   ),
                                 ),

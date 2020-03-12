@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
-import 'package:mecha_solution/View/Cart/CartScreenModel.dart';
 import 'package:mecha_solution/View/Home/HomePage.dart';
 import 'package:mecha_solution/data/remote/ProductAPI.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
@@ -204,14 +201,8 @@ class _DetailProductState extends State<DetailProduct> {
                   // print(CartScreenModel.getInstance().listProductSelected.length);
                   // CartScreenModel.getInstance().
 
-                  if (!listSelected.contains(productSelected)) {
-                    listSelected.add(productSelected);
-                  }
-
                   //Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartScreen(productSelected: productSelected,)));
                 },
-                  CartScreenModel().addProductById(widget.product.id, widget.product.name, widget.product.price, widget.product.image);
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartScreen(productSelected: productSelected,)));
               ),
             ),
             SizedBox(
