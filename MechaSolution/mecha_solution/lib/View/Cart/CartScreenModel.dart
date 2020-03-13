@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:http/http.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/data/DataOnFile.dart';
@@ -13,6 +15,7 @@ class ProductSelected{
    int totalPricePerProduct;
    ProductSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
 
+   ProductSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
 
    factory ProductSelected.fromFile(Map<String, dynamic> file){
      return ProductSelected(
@@ -46,6 +49,7 @@ bool checkContainProduct(List<ProductSelected> list, ProductSelected product) {
 
 
 class CartScreenModel extends Model{
+
   static CartScreenModel _instance;
 
   static CartScreenModel getInstance(){

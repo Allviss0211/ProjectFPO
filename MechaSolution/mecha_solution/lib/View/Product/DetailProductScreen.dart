@@ -500,6 +500,22 @@ class _DetailProductState extends State<DetailProduct> {
   }
 }
 
+class Tag {
+  String name;
+  int quantity;
+
+  Tag({this.name, this.quantity});
+
+  factory Tag.fromFile(dynamic file) {
+    return Tag(name: file['name'], quantity: file['quantity']);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'quantity': quantity,
+      };
+}
+
 List<String> listDecription = [
   "Broadcom BCM2711, Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz",
   "RAM: 1GB LPDDR4-2400 SDRAM",

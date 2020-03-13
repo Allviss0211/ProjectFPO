@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
                 iconSize: 30,
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartScreen()));
+                      MaterialPageRoute<CartScreen>(builder: (context) => CartScreen()));
                 }),
           ],
         ),

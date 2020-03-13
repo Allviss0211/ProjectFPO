@@ -9,6 +9,7 @@ import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:mecha_solution/data/DataOnFile.dart';
 
 void logCart(ProductSelected productSelected) {
   print("""
@@ -24,9 +25,6 @@ void logCart(ProductSelected productSelected) {
 final Color borderColor = Color(0xffd6d6d6);
 
 class CartScreen extends StatefulWidget {
-  // final ProductSelected productSelected;
-  // CartScreen({Key key, this.productSelected}) : super(key:key);
-
   @override
   _CartScreenState createState() => _CartScreenState();
 }
