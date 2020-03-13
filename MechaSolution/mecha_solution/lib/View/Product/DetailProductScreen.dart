@@ -103,21 +103,18 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
           )
         ],
       ),
-      body: ScopedModel(
-        model: CartScreenModel(),
-        child: FutureBuilder(
-          future: ProductAPI().getProductByID(widget.productID),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-            }
-            return snapshot.hasData
-                ? DetailProduct(product: snapshot.data)
-                : Center(
-                    child: CircularProgressIndicator(),
-                  );
-          },
-        ),
+      body: FutureBuilder(
+        future: ProductAPI().getProductByID(widget.productID),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print(snapshot.error);
+          }
+          return snapshot.hasData
+              ? DetailProduct(product: snapshot.data)
+              : Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
@@ -136,371 +133,370 @@ class _DetailProductState extends State<DetailProduct> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<CartScreenModel>(
-      builder: (context, child, model) {
-        return Stack(
-      children: <Widget>[
-        ListView(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: const Radius.circular(0.0),
-                      bottomRight: const Radius.circular(0.0)),
-                  image: DecorationImage(
-                      image: CachedNetworkImageProvider(widget.product.image),
-                      fit: BoxFit.cover)),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2 + 22,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
-              child: Text(
-                widget.product.name + "  Model B - 4GB RAM",
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Roboto Italic',
-                    fontSize: 20),
+        builder: (context, child, model) {
+      return Stack(
+        children: <Widget>[
+          ListView(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: const Radius.circular(0.0),
+                        bottomRight: const Radius.circular(0.0)),
+                    image: DecorationImage(
+                        image: CachedNetworkImageProvider(widget.product.image),
+                        fit: BoxFit.cover)),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height / 2 + 22,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                '${widget.product.price}đ',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Lobster Regular',
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(top: 5.0, left: 10.0, right: 10.0),
-              height: 50,
-              child: RaisedButton(
-                elevation: 3,
-                color: Colors.red,
-                splashColor: Colors.red.shade300,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+              Padding(
+                padding:
+                    const EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
                 child: Text(
-                  "Chọn mua",
-                  style: TextStyle(color: Colors.white, fontSize: 17),
+                  widget.product.name + "  Model B - 4GB RAM",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Roboto Italic',
+                      fontSize: 20),
                 ),
-                onPressed: () {
-                  final productSelected = ProductSelected(
-                      id: widget.product.id,
-                      name: widget.product.name,
-                      mount: 1,
-                      price: widget.product.price,
-                      image: widget.product.image,
-                      totalPricePerProduct: widget.product.price);
-                  // CartScreenModel.getInstance().addProduct(
-                  //     CartScreenModel.getInstance().listProductSelected.length, productSelected);
-                  // print(CartScreenModel.getInstance().listProductSelected.length);
-                  // CartScreenModel.getInstance().
-
-                  //Navigator.of(context).push(MaterialPageRoute(builder: (context) => CartScreen(productSelected: productSelected,)));
-                },
               ),
-            ),
-            SizedBox(
-              height: 9.0,
-            ),
-            Divider(
-              thickness: 8.0,
-              color: Colors.grey.shade300,
-            ),
-            SizedBox(
-              height: 4.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Icon(
-                        Icons.assignment_turned_in,
-                        size: 45.0,
-                        color: Colors.blue[300],
-                      ),
-                      Text("Bồi thường"),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text(
-                        "111%",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text("nếu hàng giả")
-                    ],
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  '${widget.product.price}đ',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Lobster Regular',
                   ),
-                  Column(
-                    children: <Widget>[
-                      Icon(
-                        Icons.thumb_up,
-                        size: 45.0,
-                        color: Colors.blue[300],
-                      ),
-                      Text("Thông tin"),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text("bảo hành"),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      GestureDetector(
-                        child: Text("XEM CHI TIẾT",
-                            style: TextStyle(
-                                color: Colors.blueAccent, fontSize: 15)),
-                        onTap: () async {
-                          await showModalBottomSheet(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: const Radius.circular(15.0),
-                                      topRight: const Radius.circular(15.0))),
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Stack(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: const EdgeInsets.all(10.0),
-                                      height:
-                                          MediaQuery.of(context).size.height /
-                                                  4 +
-                                              30,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              "Thông tin bảo hành",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.only(top: 5.0, left: 10.0, right: 10.0),
+                height: 50,
+                child: RaisedButton(
+                  elevation: 3,
+                  color: Colors.red,
+                  splashColor: Colors.red.shade300,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: Text(
+                    "Chọn mua",
+                    style: TextStyle(color: Colors.white, fontSize: 17),
+                  ),
+                  onPressed: () {
+                    final productSelected = ProductSelected(
+                        id: widget.product.id,
+                        name: widget.product.name,
+                        mount: 1,
+                        price: widget.product.price,
+                        image: widget.product.image,
+                        totalPricePerProduct: widget.product.price);
+                    model.addProduct(productSelected);
+                    Navigator.of(context).push(MaterialPageRoute<CartScreen>(builder: (context) => CartScreen()));
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 9.0,
+              ),
+              Divider(
+                thickness: 8.0,
+                color: Colors.grey.shade300,
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.assignment_turned_in,
+                          size: 45.0,
+                          color: Colors.blue[300],
+                        ),
+                        Text("Bồi thường"),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text(
+                          "111%",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text("nếu hàng giả")
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.thumb_up,
+                          size: 45.0,
+                          color: Colors.blue[300],
+                        ),
+                        Text("Thông tin"),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text("bảo hành"),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        GestureDetector(
+                          child: Text("XEM CHI TIẾT",
+                              style: TextStyle(
+                                  color: Colors.blueAccent, fontSize: 15)),
+                          onTap: () async {
+                            await showModalBottomSheet(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: const Radius.circular(15.0),
+                                        topRight: const Radius.circular(15.0))),
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: const EdgeInsets.all(10.0),
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                    4 +
+                                                30,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Thông tin bảo hành",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.all(10.0),
-                                            height: 43,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Nhà cung cấp",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                                Text(
-                                                  "Mechasolution",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                              ],
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              height: 43,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Nhà cung cấp",
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                  Text(
+                                                    "Mechasolution",
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.all(10.0),
-                                            height: 43,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade200,
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              height: 43,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade200,
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Thời gian bảo hành",
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                  Text(
+                                                    "12 tháng",
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Thời gian bảo hành",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                                Text(
-                                                  "12 tháng",
-                                                  style:
-                                                      TextStyle(fontSize: 15),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned(
-                                      bottom: 10.0,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0),
-                                        height: 50,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: RaisedButton(
-                                          elevation: 3,
-                                          color: Color(0xFF0D47A1),
-                                          splashColor: Colors.blue[200],
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
-                                          child: Text(
-                                            "Tôi đã hiểu",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                      ),
-                    ],
+                                      Positioned(
+                                        bottom: 10.0,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          height: 50,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: RaisedButton(
+                                            elevation: 3,
+                                            color: Color(0xFF0D47A1),
+                                            splashColor: Colors.blue[200],
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0)),
+                                            child: Text(
+                                              "Tôi đã hiểu",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.assignment_return,
+                          size: 45.0,
+                          color: Colors.blue[300],
+                        ),
+                        Text("Đổi trả trong"),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text(
+                          "7 ngày",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text("nếu SP lỗi"),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 9.0,
+              ),
+              Divider(
+                thickness: 8.0,
+                color: Colors.grey.shade300,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Mô tả sản phẩm",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontFamily: 'Lobster Regular',
+                          ),
+                        ),
+                        FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          color: Colors.lightBlue[100],
+                          child: Text(
+                            "Xem thêm",
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
+                          splashColor: Colors.lightBlue[100],
+                          onPressed: () async {
+                            await showModalBottomSheet(
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: const Radius.circular(15.0),
+                                        topRight: const Radius.circular(15.0))),
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(10.0),
+                                    height:
+                                        MediaQuery.of(context).size.height / 2 +
+                                            71,
+                                    child: ListView.builder(
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: index % 2 == 1
+                                                  ? Colors.grey.shade200
+                                                  : null,
+                                            ),
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Text(
+                                              "${listDecription[index]}",
+                                              style: TextStyle(fontSize: 15.0),
+                                            ),
+                                          );
+                                        },
+                                        itemCount: listDecription.length),
+                                  );
+                                });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Icon(
-                        Icons.assignment_return,
-                        size: 45.0,
-                        color: Colors.blue[300],
-                      ),
-                      Text("Đổi trả trong"),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text(
-                        "7 ngày",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text("nếu SP lỗi"),
-                    ],
+                  SizedBox(
+                    height: 7.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text("${listDecription[0]}"),
+                  ),
+                  SizedBox(
+                    height: 7.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text("${listDecription[1]}"),
+                  ),
+                  SizedBox(
+                    height: 7.0,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text("${listDecription[2]}"),
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 9.0,
-            ),
-            Divider(
-              thickness: 8.0,
-              color: Colors.grey.shade300,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        "Mô tả sản phẩm",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontFamily: 'Lobster Regular',
-                        ),
-                      ),
-                      FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        color: Colors.lightBlue[100],
-                        child: Text(
-                          "Xem thêm",
-                          style: TextStyle(color: Colors.blueAccent),
-                        ),
-                        splashColor: Colors.lightBlue[100],
-                        onPressed: () async {
-                          await showModalBottomSheet(
-                              isScrollControlled: true,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: const Radius.circular(15.0),
-                                      topRight: const Radius.circular(15.0))),
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  height:
-                                      MediaQuery.of(context).size.height / 2 +
-                                          71,
-                                  child: ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            color: index % 2 == 1
-                                                ? Colors.grey.shade200
-                                                : null,
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(
-                                            "${listDecription[index]}",
-                                            style: TextStyle(fontSize: 15.0),
-                                          ),
-                                        );
-                                      },
-                                      itemCount: listDecription.length),
-                                );
-                              });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text("${listDecription[0]}"),
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text("${listDecription[1]}"),
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text("${listDecription[2]}"),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 9.0,
-            ),
-            Divider(
-              thickness: 8.0,
-              color: Colors.grey.shade300,
-            ),
-          ],
-        ),
-      ],
-    );
-  
-      }
-    );
+              SizedBox(
+                height: 9.0,
+              ),
+              Divider(
+                thickness: 8.0,
+                color: Colors.grey.shade300,
+              ),
+            ],
+          ),
+        ],
+      );
+    });
   }
 }
 

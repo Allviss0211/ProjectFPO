@@ -34,6 +34,16 @@ class ProductSelected{
    };
 }
 
+bool checkContainProduct(List<ProductSelected> list, ProductSelected product) {
+  for(var e in list) {
+    if(e.id == product.id)
+      return false;
+  }
+  return true;
+}
+
+
+
 
 class CartScreenModel extends Model{
   static CartScreenModel _instance;
@@ -45,17 +55,12 @@ class CartScreenModel extends Model{
 
     return _instance;
   }
-  static ProductSelected testProduct1 = new ProductSelected(id: '1234',name: 'Raspberry 1',price: 200,totalPricePerProduct: 200,image:"https://yt3.ggpht.com/a/AGF-l79230VSZdeHXKwVJ9Jqc0kskW9RDXw3KoYZJQ=s900-c-k-c0xffffffff-no-rj-mo");
-  static ProductSelected testProduct2 = new ProductSelected(id: '1234',name: 'Raspberry 2',price: 300,totalPricePerProduct: 300,image:"https://pbs.twimg.com/profile_images/1174747027986452480/cSlw47L-_400x400.png");
-  static ProductSelected testProduct3 = new ProductSelected(id: '1234',name: 'Raspberry 3',price: 200,totalPricePerProduct: 200,image:"https://yt3.ggpht.com/a/AGF-l79230VSZdeHXKwVJ9Jqc0kskW9RDXw3KoYZJQ=s900-c-k-c0xffffffff-no-rj-mo");
 
-  List<ProductSelected> listProductSelected = [testProduct1,testProduct2,testProduct3];
-  List<String> listProductById = [];
+  List<ProductSelected> _listProductSelected = [];
   int _mount = 1;
   int _totalPrice = 0;
  
   int Sum(List<ProductSelected> listProductSelected){
-    //listProductSelected.forEach((item) => _totalPrice =_totalPrice + item.totalPricePerProduct)
     int sum = 0;
     for(int i = 0;i < listProductSelected.length; i++)
       {
@@ -64,8 +69,14 @@ class CartScreenModel extends Model{
     return sum;
   }
 
+  CartScreenModel(){
+    _totalPrice = Sum(_listProductSelected);
+    //updateListProductSelected(listProductSelected);
+  }
+
   get mount => _mount;
   get totalPrice => _totalPrice;
+  get getListProductSelected => _listProductSelected;
 
   void updateListProductSelected(List<ProductSelected> listProductSelected) async{
     listProductSelected = await readCartProduct();
@@ -75,61 +86,62 @@ class CartScreenModel extends Model{
   void addProductById(String id, String name, int price, String image){
     ProductSelected newProduct = new ProductSelected(id: id,name: name,price: price,totalPricePerProduct: price, image: image);
     print('${newProduct.id}' + ' in dòng 1');
-    listProductSelected.add(newProduct);
+    _listProductSelected.add(newProduct);
     writeCartProduct(newProduct);
-    print(listProductSelected[0].id);
+    print(_listProductSelected[0].id);
     notifyListeners();
   }
 
   void removeProductById(String id, String name, int price){
     ProductSelected newProduct = new ProductSelected(id: id,name: name,price: price);
-    listProductSelected.remove(newProduct);
+    _listProductSelected.remove(newProduct);
     notifyListeners();
   }
 
   void addProduct(ProductSelected newProduct){
-    if(!listProductSelected.contains(newProduct)) {
+    if(checkContainProduct(_listProductSelected, newProduct)) {
       _totalPrice = _totalPrice + newProduct.totalPricePerProduct;
-      listProductSelected.add(newProduct);
+      _listProductSelected.add(newProduct);
     }
     notifyListeners();
   }
+
   void insertProduct(int index, ProductSelected newProduct){
-   if(!listProductSelected.contains(newProduct)) {
+   if(!_listProductSelected.contains(newProduct)) {
       _totalPrice = _totalPrice + newProduct.totalPricePerProduct;
-      listProductSelected.insert(index, newProduct);
+      _listProductSelected.insert(index, newProduct);
     }
     notifyListeners();
   }
 
   void removeProduct(int index){
-    _totalPrice = Sum(listProductSelected) - listProductSelected[index].totalPricePerProduct;
-    listProductSelected.removeAt(index);
+    _totalPrice = Sum(_listProductSelected) - _listProductSelected[index].totalPricePerProduct;
+    _listProductSelected.removeAt(index);
     notifyListeners();
   }
 
   void increase(int index){
     _mount++;
-    listProductSelected[index].mount++;
-    listProductSelected[index].totalPricePerProduct = listProductSelected[index].mount * listProductSelected[index].price;
-    _totalPrice = Sum(listProductSelected);
+    _listProductSelected[index].mount++;
+    _listProductSelected[index].totalPricePerProduct = _listProductSelected[index].mount * _listProductSelected[index].price;
+    _totalPrice = Sum(_listProductSelected);
     notifyListeners();
   }
 
   void decrease(int index){
     _mount--;
-    if(listProductSelected[index].mount > 1)
-      listProductSelected[index].mount--;
-    listProductSelected[index].totalPricePerProduct = listProductSelected[index].mount * listProductSelected[index].price;
-    _totalPrice = Sum(listProductSelected);
+    if(_listProductSelected[index].mount > 1)
+      _listProductSelected[index].mount--;
+    _listProductSelected[index].totalPricePerProduct = _listProductSelected[index].mount * _listProductSelected[index].price;
+    _totalPrice = Sum(_listProductSelected);
     notifyListeners();
   }
 
 
   void setMount(int mount, int index){
     this._mount = mount;
-    listProductSelected[index].mount = _mount;
-    _totalPrice = _mount * listProductSelected[index].price;
+    _listProductSelected[index].mount = _mount;
+    _totalPrice = _mount * _listProductSelected[index].price;
     notifyListeners();
   }
 }

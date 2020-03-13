@@ -11,6 +11,9 @@ class QRScanner extends StatefulWidget {
 }
 
 class _QRScannerState extends State<QRScanner> {
+
+  bool _isTorchOn = false;
+
   String result = "Hey there !";
 
   Future scanQR() async {
@@ -43,7 +46,6 @@ class _QRScannerState extends State<QRScanner> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-
       child: Icon(Icons.camera_alt),
       onPressed: () {
         scanQR();

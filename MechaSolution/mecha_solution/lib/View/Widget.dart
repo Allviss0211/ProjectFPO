@@ -63,9 +63,6 @@ class ListProductHome extends StatelessWidget {
                     clipper: OvalBottomBorderClipper(),
                   ),
                   Swiper(
-                    // viewportFraction: 0.85,
-                    // scale: 0.93,
-                    //pagination: new SwiperPagination(alignment: Alignment.bottomCenter,margin: const EdgeInsets.only(top: 30)),
                     itemWidth: MediaQuery.of(context).size.width,
                     itemHeight: MediaQuery.of(context).size.height / 5,
                     layout: SwiperLayout.DEFAULT,
@@ -167,7 +164,7 @@ class ListProductHome extends StatelessWidget {
                                 color: Colors.grey,
                                 image: DecorationImage(
                                     image: CachedNetworkImageProvider(
-                                        "https://i.pinimg.com/236x/c5/71/cf/c571cf3b28768db808492072034e9e0e.jpg"),
+                                        "https://pbs.twimg.com/profile_images/1174747027986452480/cSlw47L-_400x400.png"),
                                     fit: BoxFit.cover)),
                             alignment: Alignment.center,
                             margin: EdgeInsets.symmetric(horizontal: 10),
@@ -207,9 +204,10 @@ class ListProductHome extends StatelessWidget {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 2,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height / 3 + 10,
               child: GridView.builder(
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.horizontal,
                 itemCount: model.listProduct.data.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
