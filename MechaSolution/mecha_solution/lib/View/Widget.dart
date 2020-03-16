@@ -38,15 +38,37 @@ class _ListHomeState extends State<ListHome> {
   }
 }
 
-class ListProductHome extends StatelessWidget {
+class ListProductHome extends StatefulWidget {
   final ListProduct listProduct;
   ListProductHome({Key key, this.listProduct}) : super(key: key);
 
   @override
+  _ListProductHomeState createState() => _ListProductHomeState();
+}
+
+class _ListProductHomeState extends State<ListProductHome> {
+
+  ScrollController controllerProduct;
+  ListProduct listProduct2 ;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controllerProduct = new ScrollController()..addListener((){
+        if (controllerProduct.position.extentAfter < 500) {
+          setState(() {
+            listProduct2 = widget.listProduct;
+            widget.listProduct.data += listProduct2.data;
+          });
+        }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<HomeModel>(
+     return ScopedModelDescendant<HomeModel>(
       builder: (BuildContext build, Widget child, HomeModel model) {
-        model.listProduct = this.listProduct;
+        model.listProduct = widget.listProduct;
         return ListView(
           children: <Widget>[
             Container(
@@ -97,9 +119,15 @@ class ListProductHome extends StatelessWidget {
                 height: 150,
                 margin: EdgeInsets.only(top: 15),
                 child: ListView.builder(
+                    controller: controllerProduct,
                     scrollDirection: Axis.horizontal,
                     itemCount: model.listProduct.data.length,
                     itemBuilder: (BuildContext context, int index) {
+                      int lenght = model.listProduct.data.length;
+                      if(index > lenght)
+                       {
+                          index = index - lenght*(index ~/ lenght);
+                       }
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -374,6 +402,7 @@ class _scanQRState extends State<scanQR> {
         });
   }
 }
+
 
 /*
 Container(

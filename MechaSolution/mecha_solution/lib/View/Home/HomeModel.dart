@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mecha_solution/Model/ProductFolder/Product.dart';
 import 'package:mecha_solution/Model/ProductFolder/ProductFromAPI.dart';
 import 'package:mecha_solution/Repo/ProductRepo.dart';
@@ -16,7 +17,6 @@ class HomeModel extends Model {
 
   ProductRepo productRepo = new ProductRepoImlp();
   ListProduct listProduct = new ListProduct();
-
 
   HomeModel() {
     updateProductView();

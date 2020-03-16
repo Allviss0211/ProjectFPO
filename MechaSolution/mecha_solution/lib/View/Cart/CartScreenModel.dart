@@ -15,8 +15,6 @@ class ProductSelected{
    int totalPricePerProduct;
    ProductSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
 
-   ProductSelected({this.id,this.mount = 1,this.name,this.price,this.image,this.totalPricePerProduct});
-
    factory ProductSelected.fromFile(Map<String, dynamic> file){
      return ProductSelected(
          id: file['id'] as String,
