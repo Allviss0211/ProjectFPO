@@ -1,7 +1,7 @@
-
 import 'dart:io';
-import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 
 class QrScannerOverlayShape extends ShapeBorder {
   final Color borderColor;
@@ -19,12 +19,12 @@ class QrScannerOverlayShape extends ShapeBorder {
     this.borderLength = 40,
     this.cutOutSize = 250,
   }) : assert(
-            cutOutSize != null
-                ? cutOutSize != null
-                    ? borderLength <= cutOutSize / 2 + borderWidth * 2
-                    : true
-                : true,
-            "Border can't be larger than ${cutOutSize / 2 + borderWidth * 2}");
+  cutOutSize != null
+      ? cutOutSize != null
+      ? borderLength <= cutOutSize / 2 + borderWidth * 2
+      : true
+      : true,
+  "Border can't be larger than ${cutOutSize / 2 + borderWidth * 2}");
 
   @override
   EdgeInsetsGeometry get dimensions => const EdgeInsets.all(10.0);
@@ -71,10 +71,10 @@ class QrScannerOverlayShape extends ShapeBorder {
 
     final backgroundPaint = Paint()..color = overlayColor;
 
-    final borderPaint = Paint()..color = Colors.white;
+    final borderPaint = Paint()..color = borderColor;
 
     final boxPaint = Paint()
-      ..color = Colors.white
+      ..color = borderColor
       ..style = PaintingStyle.stroke
       ..blendMode = BlendMode.srcOut;
 
@@ -118,19 +118,19 @@ class QrScannerOverlayShape extends ShapeBorder {
     //Draw text
     TextPainter(
       text: TextSpan(
-        text: 'abcd',
-        style: TextStyle(color: Colors.black),
+        text: "Vui lòng để mã QR ngay giữa màn hình ",
+        style: TextStyle(color: Colors.white),
       ),
       textDirection: TextDirection.ltr,
     )
       ..layout(maxWidth: width, minWidth: width)
       ..paint(
         canvas,
-        Offset(cutOutRect.left + (Platform.isAndroid ? 15 : 25), cutOutRect.bottom + 16),
+        Offset(cutOutRect.left + (Platform.isAndroid ? 6 : 20), cutOutRect.bottom + 15),
       );
 
     canvas
-      // Draw top right corner
+    // Draw top right corner
       ..drawRRect(
         RRect.fromLTRBAndCorners(
           cutOutRect.right - 3,
@@ -151,7 +151,7 @@ class QrScannerOverlayShape extends ShapeBorder {
         ),
         borderPaint,
       )
-      // Draw top left corner
+    // Draw top left corner
       ..drawRRect(
         RRect.fromLTRBAndCorners(
           cutOutRect.left,
@@ -172,7 +172,7 @@ class QrScannerOverlayShape extends ShapeBorder {
         ),
         borderPaint,
       )
-      // Draw bottom right corner
+    // Draw bottom right corner
       ..drawRRect(
         RRect.fromLTRBAndCorners(
           cutOutRect.right - 3,
@@ -193,7 +193,7 @@ class QrScannerOverlayShape extends ShapeBorder {
         ),
         borderPaint,
       )
-      // Draw bottom left corner
+    // Draw bottom left corner
       ..drawRRect(
         RRect.fromLTRBAndCorners(
           cutOutRect.left,
@@ -233,3 +233,5 @@ class QrScannerOverlayShape extends ShapeBorder {
     );
   }
 }
+
+

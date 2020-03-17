@@ -112,8 +112,8 @@ class _DetailProductScreenState extends State<DetailProductScreen> {
           return snapshot.hasData
               ? DetailProduct(product: snapshot.data)
               : Center(
-            child: CircularProgressIndicator(),
-          );
+                  child: CircularProgressIndicator(),
+                );
         },
       ),
     );
@@ -195,7 +195,8 @@ class _DetailProductState extends State<DetailProduct> {
                         image: widget.product.image,
                         totalPricePerProduct: widget.product.price);
                     model.addProduct(productSelected);
-                    Navigator.of(context).push(MaterialPageRoute<CartScreen>(builder: (context) => CartScreen()));
+                    Navigator.of(context).push(MaterialPageRoute<CartScreen>(
+                        builder: (context) => CartScreen()));
                   },
                 ),
               ),
@@ -345,7 +346,6 @@ class _DetailProductState extends State<DetailProduct> {
                                           child: RaisedButton(
                                             elevation: 3,
                                             color: Color(0xFF0D47A1),
-                                            splashColor: Colors.blue[200],
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8.0)),
@@ -415,18 +415,71 @@ class _DetailProductState extends State<DetailProduct> {
                             fontFamily: 'Lobster Regular',
                           ),
                         ),
-                        FlatButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          color: Colors.lightBlue[100],
-                          child: Text(
-                            "Xem thêm",
-                            style: TextStyle(color: Colors.blueAccent),
-                          ),
-                          splashColor: Colors.lightBlue[100],
-                          onPressed: () async {
-                            await showModalBottomSheet(
+                        // FlatButton(
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(20.0),
+                        //   ),
+                        //   color: Colors.lightBlue[100],
+                        //   child: Text(
+                        //     "Xem thêm",
+                        //     style: TextStyle(color: Colors.blueAccent),
+                        //   ),
+                        //   splashColor: Colors.lightBlue[100],
+                        //   onPressed: () async {
+                        //     await showModalBottomSheet(
+                        //         isScrollControlled: true,
+                        //         shape: RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.only(
+                        //                 topLeft: const Radius.circular(15.0),
+                        //                 topRight: const Radius.circular(15.0))),
+                        //         context: context,
+                        //         builder: (BuildContext context) {
+                        //           return Container(
+                        //             padding: const EdgeInsets.all(10.0),
+                        //             height:
+                        //                 MediaQuery.of(context).size.height / 2 +
+                        //                     71,
+                        //             child: ListView.builder(
+                        //                 itemBuilder: (context, index) {
+                        //                   return Container(
+                        //                     decoration: BoxDecoration(
+                        //                       color: index % 2 == 1
+                        //                           ? Colors.grey.shade200
+                        //                           : null,
+                        //                     ),
+                        //                     padding: EdgeInsets.all(10.0),
+                        //                     child: Text(
+                        //                       "${listDecription[index]}",
+                        //                       style: TextStyle(fontSize: 15.0),
+                        //                     ),
+                        //                   );
+                        //                 },
+                        //                 itemCount: listDecription.length),
+                        //           );
+                        //         });
+                        //   },
+                        // ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(right: 3.0),
+                          child: OutlineButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                            clipBehavior: Clip.antiAlias,
+                            borderSide:
+                                BorderSide(color: Colors.blue, width: 2.0),
+                            splashColor: Colors.blue.shade100,
+                            //highlightedBorderColor: Colors.blue,
+                            child: Container(
+                                width: 75.0,
+                                child: Text(
+                                  "Xem thêm",
+                                  style: TextStyle(
+                                      color: Colors.blue, fontSize: 15.0),
+                                  textAlign: TextAlign.center,
+                                )),
+                            onPressed: () {
+                              showModalBottomSheet(
                                 isScrollControlled: true,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(
@@ -457,7 +510,8 @@ class _DetailProductState extends State<DetailProduct> {
                                         itemCount: listDecription.length),
                                   );
                                 });
-                          },
+                            },
+                          ),
                         ),
                       ],
                     ),

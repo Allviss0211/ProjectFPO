@@ -124,13 +124,14 @@ class _CartScreenState extends State<CartScreen> {
                               onTap: () {
                                 model.decrease(index);
                               },
+                              borderRadius: BorderRadius.circular(30.0),
                               splashColor: Colors.red.shade200,
                               child: Padding(
                                 padding: const EdgeInsets.all(6),
                                 child: Icon(
                                   Icons.remove,
                                   color: Colors.red,
-                                  size: 27,
+                                  size: 30,
                                 ),
                               ),
                             ),
@@ -149,23 +150,18 @@ class _CartScreenState extends State<CartScreen> {
                           SizedBox(
                             width: 3,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                //borderRadius: BorderRadius.circular(60),
-                                //border: Border.all(color: borderColor, width: 0.5),
-                                ),
-                            child: InkWell(
-                              onTap: () {
-                                model.increase(index);
-                              },
-                              splashColor: Colors.green.shade200,
-                              child: Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.green,
-                                  size: 27,
-                                ),
+                          InkWell(
+                            onTap: () {
+                              model.increase(index);
+                            },
+                            borderRadius: BorderRadius.circular(30.0),
+                            splashColor: Colors.green.shade200, 
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.green,
+                                size: 30,
                               ),
                             ),
                           ),
@@ -385,7 +381,6 @@ class _CartScreenState extends State<CartScreen> {
             actions: <Widget>[
               Row(
                 children: <Widget>[
-                  //const SizedBox(width: 15.0,),
                   Container(
                     margin: const EdgeInsets.only(left: 21.0, right: 11.0),
                     child: OutlineButton(
@@ -408,7 +403,6 @@ class _CartScreenState extends State<CartScreen> {
                       },
                     ),
                   ),
-                  //const SizedBox(width: 15.0,),
                   Container(
                     margin: const EdgeInsets.only(left: 11.0, right: 21.0),
                     child: OutlineButton(
@@ -430,7 +424,6 @@ class _CartScreenState extends State<CartScreen> {
                       },
                     ),
                   ),
-                  //const SizedBox(width: 15.0,),
                 ],
               ),
             ],

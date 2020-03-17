@@ -3,6 +3,7 @@ import 'package:mecha_solution/View/Home/HomeModel.dart';
 import 'package:mecha_solution/View/Widget.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mecha_solution/View/Cart/CartScreen.dart';
+import 'package:mecha_solution/View/QRscanner/QRView_Custom.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -50,7 +51,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: Bottom(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: SearchBar(),
+      floatingActionButton: FloatingButtonQRView(),
     );
   }
 }
